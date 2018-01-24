@@ -66,7 +66,7 @@ export default class Recorder {
   _recordElement(element) {
     this.element = element;
     this.input = audioContext.createMediaElementSource(this.element);
-    let bufferSize = 2048;
+    let bufferSize = 4096;
     this.recorder = audioContext.createScriptProcessor(bufferSize, 2, 2);
     let sampleCount = Math.ceil(
       this.element.duration * audioContext.sampleRate
@@ -93,7 +93,7 @@ export default class Recorder {
 
   _recordStream(stream) {
     this.input = audioContext.createMediaStreamSource(stream);
-    let bufferSize = 2048;
+    let bufferSize = 4096;
     this.recorder = audioContext.createScriptProcessor(bufferSize, 2, 2);
     // specify the processing function
     this.recorder.onaudioprocess = this._processAudio.bind(this);

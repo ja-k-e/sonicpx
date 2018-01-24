@@ -80,8 +80,13 @@ canvas {
   box-sizing: border-box;
   height: 4rem;
   background: #f9f9f9;
+  .recorder &::after {
+    content: 'Drop/Find Audio to Render';
+  }
+  .player &::after {
+    content: 'Drop/Find Image to Play';
+  }
   &::after {
-    content: 'Drop or click to upload';
     position: absolute;
     top: 50%;
     left: 50%;

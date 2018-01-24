@@ -490,7 +490,7 @@ var Recorder = function () {
 
       this.element = element;
       this.input = _audioContext2.default.createMediaElementSource(this.element);
-      var bufferSize = 2048;
+      var bufferSize = 4096;
       this.recorder = _audioContext2.default.createScriptProcessor(bufferSize, 2, 2);
       var sampleCount = Math.ceil(this.element.duration * _audioContext2.default.sampleRate);
       var w = Math.floor(Math.sqrt(sampleCount)) * 2,
@@ -518,7 +518,7 @@ var Recorder = function () {
       var _this4 = this;
 
       this.input = _audioContext2.default.createMediaStreamSource(stream);
-      var bufferSize = 2048;
+      var bufferSize = 4096;
       this.recorder = _audioContext2.default.createScriptProcessor(bufferSize, 2, 2);
       // specify the processing function
       this.recorder.onaudioprocess = this._processAudio.bind(this);
