@@ -1,5 +1,6 @@
 import audioContext from '../globals/audioContext';
 import Canvas from './Canvas';
+import Converter from './Converter';
 import File from './File';
 
 export default class Player {
@@ -12,7 +13,7 @@ export default class Player {
     });
   }
 
-  handleFileChange(target) {
+  handleFileChange(target, file) {
     let sized = new Image(),
       data = target.result;
     sized.onload = () => this.handleImage(data, sized);
@@ -29,32 +30,31 @@ export default class Player {
   _playImage() {
     let { w, wh, h } = this.canvas,
       dataL = this.canvas.imageData(0, 0, wh, h),
-      bitsL = dataL.data,
       dataR = this.canvas.imageData(wh, 0, wh, h),
+      bitsL = dataL.data,
       bitsR = dataR.data;
 
     let buffer = audioContext.createBuffer(2, wh * h, audioContext.sampleRate);
+    let converter = new Converter(16);
 
     // Fill the buffer with data;
     // Values between -1.0 and 1.0
     let channelL = buffer.getChannelData(0),
-      channelR = buffer.getChannelData(1);
-    for (var i = 0; i < bitsL.length; i += 4) {
+      channelR = buffer.getChannelData(1),
+      len = bitsL.length;
+    for (var i = 0; i < len; i += 4) {
       let channelIdx = Math.floor(i / 4),
-        alphaL = bitsL[i + 3],
-        alphaR = bitsR[i + 3],
-        dL1 = bitsL[i + 0],
-        dL2 = bitsL[i + 1],
-        dL3 = bitsL[i + 2],
-        dR1 = bitsR[i + 0],
-        dR2 = bitsR[i + 1],
-        dR3 = bitsR[i + 2],
-        valL = dL1 * 256.0 * 256.0 + dL2 * 256.0 + dL3,
-        relL = valL / 16777216.0 * 2.0 - 1.0,
-        valR = dR1 * 256.0 * 256.0 + dR2 * 256.0 + dR3,
-        relR = valR / 16777216.0 * 2.0 - 1.0;
-      if (alphaL > 0) channelL[channelIdx] = relL;
-      if (alphaR > 0) channelR[channelIdx] = relR;
+        dLr = bitsL[i + 0],
+        dLg = bitsL[i + 1],
+        dLb = bitsL[i + 2],
+        dLa = bitsL[i + 3],
+        dRr = bitsR[i + 0],
+        dRg = bitsR[i + 1],
+        dRb = bitsR[i + 2],
+        dRa = bitsR[i + 3];
+
+      if (dLa === 255) channelL[channelIdx] = converter.toValue(dLr, dLg, dLb);
+      if (dRa === 255) channelR[channelIdx] = converter.toValue(dRr, dRg, dRb);
     }
 
     let source = audioContext.createBufferSource(),

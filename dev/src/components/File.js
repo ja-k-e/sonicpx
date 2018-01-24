@@ -25,7 +25,8 @@ export default class File {
       this.$container.classList.remove('is-active');
       if (this.$file.files && this.$file.files[0]) {
         let reader = new FileReader();
-        reader.onload = ({ target }) => this.handleChange(target);
+        reader.onload = ({ target }) =>
+          this.handleChange(target, this.$file.files[0]);
         reader.readAsDataURL(this.$file.files[0]);
       }
     });

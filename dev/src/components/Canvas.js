@@ -18,7 +18,7 @@ export default class Canvas {
     this.cvs.height = h;
   }
 
-  putImageData(data, x, y) {
+  putImage(data, x, y) {
     this.ctx.putImageData(data, x, y);
   }
 

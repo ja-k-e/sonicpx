@@ -1,5 +1,6 @@
 import audioContext from '../globals/audioContext';
 import Canvas from './Canvas';
+import Converter from './Converter';
 import File from './File';
 
 export default class Recorder {
@@ -13,17 +14,21 @@ export default class Recorder {
     this.reset();
   }
 
-  handleFileChange(target) {
+  handleFileChange(target, file) {
     let element = new Audio();
     element.setAttribute('crossorigin', 'anonymous');
     element.src = target.result;
-    this.initializeElement(element);
+    // https://stackoverflow.com/questions/29317866/read-samples-from-wav-file
+    // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer
+    element.addEventListener('canplay', () => {
+      this.initializeElement(element);
+    });
   }
 
   initializeElement(element) {
     this.mode = 'element';
     this.reset();
-    element.addEventListener('canplay', () => this._recordElement(element));
+    this._recordElement(element);
     element.addEventListener('ended', this.stop.bind(this));
   }
 
@@ -48,6 +53,7 @@ export default class Recorder {
     this.tick = 0;
     this.canvas.clear();
     this.canvas.setSize(2400, 6400);
+    this.imageData = null;
   }
 
   stop() {
@@ -74,6 +80,8 @@ export default class Recorder {
     let w = Math.floor(Math.sqrt(sampleCount)) * 2,
       wh = w * 0.5,
       h = sampleCount / wh;
+    // Even Height.
+    if (h % 2 !== 0) h += 1;
     this.canvas.setSize(w, h);
     // specify the processing function
     this.recorder.onaudioprocess = this._processAudio.bind(this);
@@ -81,6 +89,8 @@ export default class Recorder {
     this.input.connect(this.recorder);
     this.input.connect(audioContext.destination);
     this.element.onended = () => {
+      this.canvas.clear();
+      this.canvas.putImage(this.imageData, 0, 0);
       this.input.disconnect(this.recorder);
       this.input.disconnect(audioContext.destination);
       this.recorder.disconnect(audioContext.destination);
@@ -110,29 +120,43 @@ export default class Recorder {
 
   _processAudio(data) {
     if (this.off) return;
+    if (!this.imageData)
+      this.imageData = this.canvas.ctx.createImageData(
+        this.canvas.w,
+        this.canvas.h
+      );
+
     let left = data.inputBuffer.getChannelData(0),
-      right = data.inputBuffer.getChannelData(1);
+      right = data.inputBuffer.getChannelData(1),
+      converter = new Converter(16);
+
     for (let i = 0; i < left.length; i++) {
       if (this.off) return;
-      // -1 through 1 => 0 through 16777216, 24 bits
-      let valL = left[i] * 8388608 + 8388608,
-        valR = right[i] * 8388608 + 8388608;
 
-      // A * 256, remainder b
-      let valLA = Math.floor(valL / 256 / 256),
-        valLB = Math.floor(valL - valLA * 256 * 256),
-        valLC = Math.floor(valL - valLB * 256),
-        valRA = Math.floor(valR / 256 / 256),
-        valRB = Math.floor(valR - valRA * 256 * 256),
-        valRC = Math.floor(valR - valRB * 256);
+      let rgbL = converter.toRGB(left[i]),
+        rgbR = converter.toRGB(right[i]);
+
       let x = this.tick % this.canvas.wh,
-        y = Math.floor(this.tick / this.canvas.wh),
-        xtra = 0;
+        y = Math.floor(this.tick / this.canvas.wh);
+      if (y !== this.lastY) this.canvas.putImage(this.imageData, 0, 0);
       this.lastY = y;
-      this.canvas.ctx.fillStyle = `rgb(${valLA},${valLB},${valLC})`;
-      this.canvas.ctx.fillRect(x, y, 1, 1);
-      this.canvas.ctx.fillStyle = `rgb(${valRA},${valRB},${valRC})`;
-      this.canvas.ctx.fillRect(x + this.canvas.wh, y, 1, 1);
+
+      // The image data starting index
+      let idxL = y * this.canvas.w * 4 + x * 4,
+        idxR = idxL + this.canvas.wh * 4;
+
+      // Setting Left channel
+      this.imageData.data[idxL + 0] = rgbL[0];
+      this.imageData.data[idxL + 1] = rgbL[1];
+      this.imageData.data[idxL + 2] = rgbL[2];
+      this.imageData.data[idxL + 3] = 255;
+
+      // Setting Right channel
+      this.imageData.data[idxR + 0] = rgbR[0];
+      this.imageData.data[idxR + 1] = rgbR[1];
+      this.imageData.data[idxR + 2] = rgbR[2];
+      this.imageData.data[idxR + 3] = 255;
+
       this.tick++;
     }
   }

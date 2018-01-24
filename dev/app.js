@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -116,8 +116,8 @@ var Canvas = function () {
       this.cvs.height = h;
     }
   }, {
-    key: 'putImageData',
-    value: function putImageData(data, x, y) {
+    key: 'putImage',
+    value: function putImage(data, x, y) {
       this.ctx.putImageData(data, x, y);
     }
   }, {
@@ -139,6 +139,89 @@ exports.default = Canvas;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BIT16 = 65536.0,
+    BIT16H = Math.round(BIT16 * 0.5) * 1.0,
+    BIT24 = 16777216.0,
+    BIT24H = Math.round(BIT24 * 0.5) * 1.0;
+
+var Converter = function () {
+  function Converter(bits) {
+    _classCallCheck(this, Converter);
+
+    this.bits = bits;
+  }
+
+  // value = -1 to 1
+
+
+  _createClass(Converter, [{
+    key: "toRGB",
+    value: function toRGB(value) {
+      if (this.bits === 16) return this._valueToRGB16(value);else if (this.bits === 24) return this._valueToRGB24(value);
+    }
+  }, {
+    key: "_valueToRGB16",
+    value: function _valueToRGB16(value) {
+      var val = value * BIT16H + BIT16H;
+      var r = 0,
+          g = Math.floor(val / 256.0),
+          realG = g * 256.0,
+          b = val - realG;
+      return [r, g, b];
+    }
+  }, {
+    key: "_valueToRGB24",
+    value: function _valueToRGB24(value) {
+      var val = value * BIT24H + BIT24H;
+      var r = Math.floor(val / 256.0 / 256.0),
+          realR = r * 256.0 * 256.0,
+          g = Math.floor((val - realR) / 256.0),
+          realG = g * 256.0,
+          b = val - realR - realG;
+      return [r, g, b];
+    }
+
+    // r, g, b each = 0-255
+
+  }, {
+    key: "toValue",
+    value: function toValue(r, g, b) {
+      if (this.bits === 16) return this._normalizedValue16(r, g, b);else if (this.bits === 24) return this._normalizedValue24(r, g, b);
+    }
+  }, {
+    key: "_normalizedValue16",
+    value: function _normalizedValue16(r, g, b) {
+      var value = g * 256.0 + b;
+      return value / BIT16 * 2.0 - 1.0;
+    }
+  }, {
+    key: "_normalizedValue24",
+    value: function _normalizedValue24(r, g, b) {
+      var value = r * 256.0 * 256.0 + g * 256.0 + b;
+      return value / BIT24 * 2.0 - 1.0;
+    }
+  }]);
+
+  return Converter;
+}();
+
+exports.default = Converter;
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -191,7 +274,7 @@ var File = function () {
           var reader = new FileReader();
           reader.onload = function (_ref2) {
             var target = _ref2.target;
-            return _this.handleChange(target);
+            return _this.handleChange(target, _this.$file.files[0]);
           };
           reader.readAsDataURL(_this.$file.files[0]);
         }
@@ -205,13 +288,13 @@ var File = function () {
 exports.default = File;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _App = __webpack_require__(4);
+var _App = __webpack_require__(5);
 
 var _App2 = _interopRequireDefault(_App);
 
@@ -224,7 +307,7 @@ console.info('\n%cSonicPX v' + VERSION + '\n%c\xA9 Jake Albaugh ' + new Date().g
 new _App2.default();
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -234,11 +317,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Player = __webpack_require__(5);
+var _Player = __webpack_require__(6);
 
 var _Player2 = _interopRequireDefault(_Player);
 
-var _Recorder = __webpack_require__(6);
+var _Recorder = __webpack_require__(7);
 
 var _Recorder2 = _interopRequireDefault(_Recorder);
 
@@ -271,7 +354,7 @@ var App = function App() {
 exports.default = App;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -291,7 +374,11 @@ var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _File = __webpack_require__(2);
+var _Converter = __webpack_require__(2);
+
+var _Converter2 = _interopRequireDefault(_Converter);
+
+var _File = __webpack_require__(3);
 
 var _File2 = _interopRequireDefault(_File);
 
@@ -313,7 +400,7 @@ var Player = function () {
 
   _createClass(Player, [{
     key: 'handleFileChange',
-    value: function handleFileChange(target) {
+    value: function handleFileChange(target, file) {
       var _this = this;
 
       var sized = new Image(),
@@ -339,33 +426,32 @@ var Player = function () {
           wh = _canvas.wh,
           h = _canvas.h,
           dataL = this.canvas.imageData(0, 0, wh, h),
-          bitsL = dataL.data,
           dataR = this.canvas.imageData(wh, 0, wh, h),
+          bitsL = dataL.data,
           bitsR = dataR.data;
 
 
       var buffer = _audioContext2.default.createBuffer(2, wh * h, _audioContext2.default.sampleRate);
+      var converter = new _Converter2.default(16);
 
       // Fill the buffer with data;
       // Values between -1.0 and 1.0
       var channelL = buffer.getChannelData(0),
-          channelR = buffer.getChannelData(1);
-      for (var i = 0; i < bitsL.length; i += 4) {
+          channelR = buffer.getChannelData(1),
+          len = bitsL.length;
+      for (var i = 0; i < len; i += 4) {
         var channelIdx = Math.floor(i / 4),
-            alphaL = bitsL[i + 3],
-            alphaR = bitsR[i + 3],
-            dL1 = bitsL[i + 0],
-            dL2 = bitsL[i + 1],
-            dL3 = bitsL[i + 2],
-            dR1 = bitsR[i + 0],
-            dR2 = bitsR[i + 1],
-            dR3 = bitsR[i + 2],
-            valL = dL1 * 256.0 * 256.0 + dL2 * 256.0 + dL3,
-            relL = valL / 16777216.0 * 2.0 - 1.0,
-            valR = dR1 * 256.0 * 256.0 + dR2 * 256.0 + dR3,
-            relR = valR / 16777216.0 * 2.0 - 1.0;
-        if (alphaL > 0) channelL[channelIdx] = relL;
-        if (alphaR > 0) channelR[channelIdx] = relR;
+            dLr = bitsL[i + 0],
+            dLg = bitsL[i + 1],
+            dLb = bitsL[i + 2],
+            dLa = bitsL[i + 3],
+            dRr = bitsR[i + 0],
+            dRg = bitsR[i + 1],
+            dRb = bitsR[i + 2],
+            dRa = bitsR[i + 3];
+
+        if (dLa === 255) channelL[channelIdx] = converter.toValue(dLr, dLg, dLb);
+        if (dRa === 255) channelR[channelIdx] = converter.toValue(dRr, dRg, dRb);
       }
 
       var source = _audioContext2.default.createBufferSource(),
@@ -385,7 +471,7 @@ var Player = function () {
 exports.default = Player;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -405,7 +491,11 @@ var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _File = __webpack_require__(2);
+var _Converter = __webpack_require__(2);
+
+var _Converter2 = _interopRequireDefault(_Converter);
+
+var _File = __webpack_require__(3);
 
 var _File2 = _interopRequireDefault(_File);
 
@@ -428,22 +518,24 @@ var Recorder = function () {
 
   _createClass(Recorder, [{
     key: 'handleFileChange',
-    value: function handleFileChange(target) {
+    value: function handleFileChange(target, file) {
+      var _this = this;
+
       var element = new Audio();
       element.setAttribute('crossorigin', 'anonymous');
       element.src = target.result;
-      this.initializeElement(element);
+      // https://stackoverflow.com/questions/29317866/read-samples-from-wav-file
+      // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsArrayBuffer
+      element.addEventListener('canplay', function () {
+        _this.initializeElement(element);
+      });
     }
   }, {
     key: 'initializeElement',
     value: function initializeElement(element) {
-      var _this = this;
-
       this.mode = 'element';
       this.reset();
-      element.addEventListener('canplay', function () {
-        return _this._recordElement(element);
-      });
+      this._recordElement(element);
       element.addEventListener('ended', this.stop.bind(this));
     }
   }, {
@@ -467,6 +559,7 @@ var Recorder = function () {
       this.tick = 0;
       this.canvas.clear();
       this.canvas.setSize(2400, 6400);
+      this.imageData = null;
     }
   }, {
     key: 'stop',
@@ -496,6 +589,8 @@ var Recorder = function () {
       var w = Math.floor(Math.sqrt(sampleCount)) * 2,
           wh = w * 0.5,
           h = sampleCount / wh;
+      // Even Height.
+      if (h % 2 !== 0) h += 1;
       this.canvas.setSize(w, h);
       // specify the processing function
       this.recorder.onaudioprocess = this._processAudio.bind(this);
@@ -503,6 +598,8 @@ var Recorder = function () {
       this.input.connect(this.recorder);
       this.input.connect(_audioContext2.default.destination);
       this.element.onended = function () {
+        _this3.canvas.clear();
+        _this3.canvas.putImage(_this3.imageData, 0, 0);
         _this3.input.disconnect(_this3.recorder);
         _this3.input.disconnect(_audioContext2.default.destination);
         _this3.recorder.disconnect(_audioContext2.default.destination);
@@ -536,29 +633,39 @@ var Recorder = function () {
     key: '_processAudio',
     value: function _processAudio(data) {
       if (this.off) return;
+      if (!this.imageData) this.imageData = this.canvas.ctx.createImageData(this.canvas.w, this.canvas.h);
+
       var left = data.inputBuffer.getChannelData(0),
-          right = data.inputBuffer.getChannelData(1);
+          right = data.inputBuffer.getChannelData(1),
+          converter = new _Converter2.default(16);
+
       for (var i = 0; i < left.length; i++) {
         if (this.off) return;
-        // -1 through 1 => 0 through 16777216, 24 bits
-        var valL = left[i] * 8388608 + 8388608,
-            valR = right[i] * 8388608 + 8388608;
 
-        // A * 256, remainder b
-        var valLA = Math.floor(valL / 256 / 256),
-            valLB = Math.floor(valL - valLA * 256 * 256),
-            valLC = Math.floor(valL - valLB * 256),
-            valRA = Math.floor(valR / 256 / 256),
-            valRB = Math.floor(valR - valRA * 256 * 256),
-            valRC = Math.floor(valR - valRB * 256);
+        var rgbL = converter.toRGB(left[i]),
+            rgbR = converter.toRGB(right[i]);
+
         var x = this.tick % this.canvas.wh,
-            y = Math.floor(this.tick / this.canvas.wh),
-            xtra = 0;
+            y = Math.floor(this.tick / this.canvas.wh);
+        if (y !== this.lastY) this.canvas.putImage(this.imageData, 0, 0);
         this.lastY = y;
-        this.canvas.ctx.fillStyle = 'rgb(' + valLA + ',' + valLB + ',' + valLC + ')';
-        this.canvas.ctx.fillRect(x, y, 1, 1);
-        this.canvas.ctx.fillStyle = 'rgb(' + valRA + ',' + valRB + ',' + valRC + ')';
-        this.canvas.ctx.fillRect(x + this.canvas.wh, y, 1, 1);
+
+        // The image data starting index
+        var idxL = y * this.canvas.w * 4 + x * 4,
+            idxR = idxL + this.canvas.wh * 4;
+
+        // Setting Left channel
+        this.imageData.data[idxL + 0] = rgbL[0];
+        this.imageData.data[idxL + 1] = rgbL[1];
+        this.imageData.data[idxL + 2] = rgbL[2];
+        this.imageData.data[idxL + 3] = 255;
+
+        // Setting Right channel
+        this.imageData.data[idxR + 0] = rgbR[0];
+        this.imageData.data[idxR + 1] = rgbR[1];
+        this.imageData.data[idxR + 2] = rgbR[2];
+        this.imageData.data[idxR + 3] = 255;
+
         this.tick++;
       }
     }
