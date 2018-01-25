@@ -7,7 +7,7 @@ export default class Player {
   constructor() {
     this.canvas = new Canvas(document.querySelector('.player .input'));
     this.file = new File({
-      accept: 'image/*.png',
+      accept: 'image/*',
       $parent: document.querySelector('.player .upload'),
       handleChange: this.handleFileChange.bind(this)
     });

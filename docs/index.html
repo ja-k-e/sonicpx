@@ -9,22 +9,24 @@
   <title>Sonic Pixels</title>
 </head>
 <body>
+  <nav>
+    <button class="button record active">Record Pixels <small>MP3/MP4/WAV</small></button>
+    <button class="button play">Play Pixels <small>PNG/JPG</small></button>
+  </nav>
   <main>
-    <section class="recorder">
-      <h1>Record Pixels <small>MP3/MP4/WAV</small></h1>
+    <section class="recorder active">
       <div class="upload"></div>
-      <div class="actions">
+      <!-- <div class="actions">
         <button class="record">
           <span class="on">Stop</span>
           <span class="off">Record</span>
         </button>
-      </div>
+      </div> -->
       <div class="output"></div>
-      <audio crossorigin="anonymous" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/111863/Page_1.mp3"></audio>
+      <!-- <audio crossorigin="anonymous" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/111863/Page_1.mp3"></audio> -->
     </section>
 
     <section class="player">
-      <h1>Play Pixels <small>PNG</small></h1>
       <div class="upload"></div>
       <div class="input"></div>
     </section>

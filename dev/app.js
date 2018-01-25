@@ -116,6 +116,11 @@ var Canvas = function () {
       this.cvs.height = h;
     }
   }, {
+    key: 'createImage',
+    value: function createImage(w, h) {
+      return this.ctx.createImageData(w, h);
+    }
+  }, {
     key: 'putImage',
     value: function putImage(data, x, y) {
       this.ctx.putImageData(data, x, y);
@@ -128,6 +133,8 @@ var Canvas = function () {
   }, {
     key: 'imageData',
     value: function imageData(x, y, w, h) {
+      w = w || this.w;
+      h = h || this.h;
       return this.ctx.getImageData(x, y, w, h);
     }
   }]);
@@ -274,7 +281,9 @@ var File = function () {
           var reader = new FileReader();
           reader.onload = function (_ref2) {
             var target = _ref2.target;
-            return _this.handleChange(target, _this.$file.files[0]);
+
+            _this.handleChange(target, _this.$file.files[0]);
+            _this.$container.remove();
           };
           reader.readAsDataURL(_this.$file.files[0]);
         }
@@ -317,6 +326,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _Player = __webpack_require__(6);
 
 var _Player2 = _interopRequireDefault(_Player);
@@ -329,27 +340,54 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var App = function App() {
-  var _this = this;
+var App = function () {
+  function App() {
+    _classCallCheck(this, App);
 
-  _classCallCheck(this, App);
+    this.recorder = new _Recorder2.default();
+    this.player = new _Player2.default();
+    this._initDOM();
+  }
 
-  this.recorder = new _Recorder2.default();
-  this.player = new _Player2.default();
-  var $record = document.querySelector('.record');
-  var recording = false,
-      started = false;
-  $record.addEventListener('click', function () {
-    if (recording) _this.recorder.stop();else _this.recorder.reset();
-    recording = !recording;
-    var mtd = recording ? 'add' : 'remove';
-    $record.classList[mtd]('active');
-    if (recording && !started) {
-      started = true;
-      _this.recorder.initializeStream().catch(alert);
+  _createClass(App, [{
+    key: '_initDOM',
+    value: function _initDOM() {
+      var $record = document.querySelector('nav .record'),
+          $play = document.querySelector('nav .play'),
+          $recorder = document.querySelector('section.recorder'),
+          $player = document.querySelector('section.player');
+      $record.addEventListener('click', function () {
+        $recorder.classList.add('active');
+        $record.classList.add('active');
+        $player.classList.remove('active');
+        $play.classList.remove('active');
+      });
+      $play.addEventListener('click', function () {
+        $player.classList.add('active');
+        $play.classList.add('active');
+        $recorder.classList.remove('active');
+        $record.classList.remove('active');
+      });
+
+      // let $record = document.querySelector('.record');
+      // let recording = false,
+      //   started = false;
+      // $record.addEventListener('click', () => {
+      //   if (recording) this.recorder.stop();
+      //   else this.recorder.reset();
+      //   recording = !recording;
+      //   let mtd = recording ? 'add' : 'remove';
+      //   $record.classList[mtd]('active');
+      //   if (recording && !started) {
+      //     started = true;
+      //     this.recorder.initializeStream().catch(alert);
+      //   }
+      // });
     }
-  });
-};
+  }]);
+
+  return App;
+}();
 
 exports.default = App;
 
@@ -392,7 +430,7 @@ var Player = function () {
 
     this.canvas = new _Canvas2.default(document.querySelector('.player .input'));
     this.file = new _File2.default({
-      accept: 'image/*.png',
+      accept: 'image/*',
       $parent: document.querySelector('.player .upload'),
       handleChange: this.handleFileChange.bind(this)
     });
@@ -503,11 +541,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var SECONDS_PER_CANVAS = 5;
+
 var Recorder = function () {
   function Recorder() {
     _classCallCheck(this, Recorder);
 
-    this.canvas = new _Canvas2.default(document.querySelector('.recorder .output'));
+    this.$parent = document.querySelector('.recorder .output');
     this.file = new _File2.default({
       accept: 'audio/*',
       $parent: document.querySelector('.recorder .upload'),
@@ -557,8 +597,8 @@ var Recorder = function () {
     value: function reset() {
       this.off = false;
       this.tick = 0;
-      this.canvas.clear();
-      this.canvas.setSize(2400, 6400);
+      // this.canvas.clear();
+      // this.canvas.setSize(2400, 6400);
       this.imageData = null;
     }
   }, {
@@ -577,6 +617,11 @@ var Recorder = function () {
       this.canvas.putImageData(data, 0, 0);
     }
   }, {
+    key: 'nextCanvas',
+    value: function nextCanvas() {
+      this.canvasesIdx++;
+    }
+  }, {
     key: '_recordElement',
     value: function _recordElement(element) {
       var _this3 = this;
@@ -585,21 +630,34 @@ var Recorder = function () {
       this.input = _audioContext2.default.createMediaElementSource(this.element);
       var bufferSize = 4096;
       this.recorder = _audioContext2.default.createScriptProcessor(bufferSize, 2, 2);
-      var sampleCount = Math.ceil(this.element.duration * _audioContext2.default.sampleRate);
-      var w = Math.floor(Math.sqrt(sampleCount)) * 2,
-          wh = w * 0.5,
-          h = sampleCount / wh;
-      // Even Height.
-      if (h % 2 !== 0) h += 1;
-      this.canvas.setSize(w, h);
+      this._setCanvases(element);
       // specify the processing function
       this.recorder.onaudioprocess = this._processAudio.bind(this);
       // connect stream to our recorder
       this.input.connect(this.recorder);
       this.input.connect(_audioContext2.default.destination);
       this.element.onended = function () {
-        _this3.canvas.clear();
         _this3.canvas.putImage(_this3.imageData, 0, 0);
+        var canvas = new _Canvas2.default(),
+            totalW = _this3.canvases[0].w,
+            firstH = _this3.canvases[0].h,
+            totalH = _this3.canvases.map(function (a) {
+          return a.h;
+        }).reduce(function (a, b) {
+          return a + b;
+        });
+        canvas.setSize(totalW, totalH);
+        for (var i = 0; i < _this3.canvases.length; i++) {
+          var cvs = _this3.canvases[i],
+              y = i * firstH,
+              d = cvs.imageData(0, 0);
+          canvas.putImage(d, 0, y);
+        }
+        _this3.$parent.innerHTML = '';
+        _this3.$parent.appendChild(canvas.cvs);
+        setTimeout(function () {
+          alert('Download Image by right clicking and selecting "Save Image As..."');
+        }, 1000);
         _this3.input.disconnect(_this3.recorder);
         _this3.input.disconnect(_audioContext2.default.destination);
         _this3.recorder.disconnect(_audioContext2.default.destination);
@@ -608,6 +666,27 @@ var Recorder = function () {
       // connect our recorder to the previous destination
       this.recorder.connect(_audioContext2.default.destination);
       this.element.play();
+    }
+  }, {
+    key: '_setCanvases',
+    value: function _setCanvases(_ref) {
+      var duration = _ref.duration;
+
+      this.canvasesIdx = 0;
+      this.canvases = [];
+      var sampleCount = Math.ceil(duration * _audioContext2.default.sampleRate),
+          w = Math.floor(Math.sqrt(sampleCount)) * 2,
+          wh = w * 0.5,
+          h = Math.ceil(sampleCount / wh),
+          canvasCount = Math.ceil(duration / SECONDS_PER_CANVAS),
+          cvsH = Math.ceil(h / canvasCount),
+          cvsLastH = canvasCount === 1 ? h : h - cvsH * (canvasCount - 1);
+      for (var i = 0; i < canvasCount; i++) {
+        var canvas = new _Canvas2.default(this.$parent),
+            ch = i === canvasCount - 1 ? cvsLastH : cvsH;
+        canvas.setSize(w, ch);
+        this.canvases.push(canvas);
+      }
     }
   }, {
     key: '_recordStream',
@@ -633,7 +712,7 @@ var Recorder = function () {
     key: '_processAudio',
     value: function _processAudio(data) {
       if (this.off) return;
-      if (!this.imageData) this.imageData = this.canvas.ctx.createImageData(this.canvas.w, this.canvas.h);
+      if (!this.imageData) this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
 
       var left = data.inputBuffer.getChannelData(0),
           right = data.inputBuffer.getChannelData(1),
@@ -647,7 +726,12 @@ var Recorder = function () {
 
         var x = this.tick % this.canvas.wh,
             y = Math.floor(this.tick / this.canvas.wh);
-        if (y !== this.lastY) this.canvas.putImage(this.imageData, 0, 0);
+        if (y !== this.lastY && y > this.canvas.h) {
+          this.canvas.putImage(this.imageData, 0, 0);
+          this.nextCanvas();
+          this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
+          this.tick = 0;
+        }
         this.lastY = y;
 
         // The image data starting index
@@ -668,6 +752,11 @@ var Recorder = function () {
 
         this.tick++;
       }
+    }
+  }, {
+    key: 'canvas',
+    get: function get() {
+      return this.canvases[this.canvasesIdx];
     }
   }]);
 

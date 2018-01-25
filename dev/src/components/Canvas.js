@@ -18,6 +18,10 @@ export default class Canvas {
     this.cvs.height = h;
   }
 
+  createImage(w, h) {
+    return this.ctx.createImageData(w, h);
+  }
+
   putImage(data, x, y) {
     this.ctx.putImageData(data, x, y);
   }
@@ -27,6 +31,8 @@ export default class Canvas {
   }
 
   imageData(x, y, w, h) {
+    w = w || this.w;
+    h = h || this.h;
     return this.ctx.getImageData(x, y, w, h);
   }
 }
