@@ -27,7 +27,7 @@ export default class File {
         let reader = new FileReader();
         reader.onload = ({ target }) => {
           this.handleChange(target, this.$file.files[0]);
-          this.$container.remove();
+          this.$file.value = '';
         };
         reader.readAsDataURL(this.$file.files[0]);
       }

@@ -25,42 +25,112 @@ body {
     }
   }
   main {
-    width: 95%;
-    max-width: 1200px;
-    margin: 1rem auto;
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
     section {
-      width: 100%;
-      &:not(.active) {
-        display: none;
+      box-sizing: border-box;
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      .file {
+        height: 100px;
       }
-      h1 {
-        margin-top: 0;
-        margin-bottom: 1rem;
+      div:not(.file) {
+        flex: 1;
       }
-      .upload,
-      .actions {
-        margin-bottom: 1rem;
+      > * + * {
+        margin-top: 1rem;
       }
-      .actions {
-        .record {
-          background: #0eb26d;
-          &.active {
-            background: tomato;
-          }
-          .on {
-            display: none;
-          }
-          .off {
-            display: block;
-          }
-          &.active {
-            .on {
-              display: block;
-            }
-            .off {
-              display: none;
-            }
-          }
+      .file-upload {
+        background: #f0f0f0;
+      }
+      &.player {
+        background: #121212;
+        .file-upload {
+          background: #2f2f2f;
+          color: white;
+        }
+      }
+      &,
+      &.player {
+        .file-upload.is-active,
+        .file-upload:hover {
+          background: tomato;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+span.checkbox {
+  $h: 36px;
+  $w: 80px;
+  position: relative;
+  display: block;
+  width: $w * 3;
+  margin: 0 auto;
+  label {
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    &::before,
+    &::after {
+      line-height: $h;
+      height: $h;
+      width: $w;
+      text-align: center;
+    }
+    &::before {
+      color: #000;
+      content: attr(unchecked);
+    }
+    &::after {
+      color: #ccc;
+      content: attr(checked);
+    }
+    span {
+      display: block;
+      position: relative;
+      width: $w;
+      height: $h;
+      line-height: $h;
+      background: tomato;
+      border-radius: $h * 0.5;
+      &::after {
+        content: '';
+        display: block;
+        height: $h - 4;
+        position: absolute;
+        border-radius: $h * 0.5;
+        z-index: 2;
+        transition: left 150ms ease-in-out;
+        left: 2px;
+        top: 2px;
+        width: $h - 4;
+        background: white;
+      }
+    }
+  }
+  input {
+    position: absolute;
+    left: -9999999px;
+    &:checked {
+      + label {
+        &::before {
+          color: #ccc;
+        }
+        &::after {
+          color: #000;
+        }
+      }
+      + label span {
+        background: tomato;
+        &::after {
+          left: calc(100% - #{$h - 2px});
         }
       }
     }
@@ -83,33 +153,29 @@ button {
 canvas {
   width: 100%;
   height: auto;
-  background: #f9f9f9;
   display: block;
 }
 
 .file-upload {
   cursor: pointer;
   height: 100%;
+  display: block;
+  width: 100%;
   position: relative;
   box-sizing: border-box;
-  height: 4rem;
-  background: #f9f9f9;
   .recorder &::after {
-    content: 'Drop/Find Audio to Render';
+    content: 'Drop or Find Audio to Render';
   }
   .player &::after {
-    content: 'Drop/Find Image to Play';
+    content: 'Drop or Find an Image to Play';
   }
   &::after {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  &.is-active,
-  &:hover {
-    background: black;
-    color: white;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
   }
   [type='file'] {
     position: absolute;
