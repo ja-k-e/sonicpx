@@ -7,11 +7,15 @@ export default class AudioPlayer {
   }
 
   bindPlay(handler) {
-    this.$play.addEventListener('click', e => {
-      this.disable();
+    let self = this;
+    this.$play.addEventListener('click', playHandler, false);
+    // Call once
+    function playHandler(e) {
       e.preventDefault();
+      e.target.removeEventListener(e.type, playHandler, false);
+      self.disable();
       handler();
-    });
+    }
   }
 
   enable() {

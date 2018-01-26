@@ -2,6 +2,9 @@ $font: 'Roboto', BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto',
   'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
   'Helvetica', 'Arial', sans-serif;
 $header-h: 36px;
+$checkbox-w: 80px;
+$file-h: 100px;
+$audio-h: 30px;
 
 html,
 body {
@@ -40,17 +43,17 @@ body {
       display: flex;
       flex-direction: column;
       .file {
-        height: 100px;
-        transition: height 250ms ease-in-out 50ms,
-          margin-top 250ms ease-in-out 300ms;
+        height: $file-h;
+        transition: height 250ms linear, margin-top 50ms linear 250ms;
         .file-upload {
-          transition: opacity 50ms ease-in-out;
+          transition: opacity 150ms linear 350ms;
         }
         &.disabled {
           margin-top: 0;
           height: 0px;
           .file-upload {
             opacity: 0;
+            transition: opacity 50ms linear 0ms;
           }
         }
       }
@@ -108,10 +111,9 @@ body {
 }
 
 span.checkbox {
-  $w: 80px;
   position: relative;
   display: block;
-  width: $w * 3;
+  width: $checkbox-w * 3;
   margin: 0 auto;
   label {
     width: 100%;
@@ -121,7 +123,7 @@ span.checkbox {
     &::after {
       line-height: $header-h;
       height: $header-h;
-      width: $w;
+      width: $checkbox-w;
       text-align: center;
     }
     &::before {
@@ -135,7 +137,7 @@ span.checkbox {
     span {
       display: block;
       position: relative;
-      width: $w;
+      width: $checkbox-w;
       height: $header-h;
       line-height: $header-h;
       background: tomato;
@@ -196,7 +198,6 @@ canvas {
   display: block;
 }
 
-$audio-h: 20px;
 .audio {
   height: $audio-h;
   user-select: none;

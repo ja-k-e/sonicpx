@@ -36,10 +36,28 @@ export default class ImageToAudio {
 
   loadMeta() {
     let { data } = this.canvas.imageData(0, 0, 4, 1);
-    this.version = data[3] * 256 + data[7];
-    this.stereo = data[11] === 1;
-    this.bits = data[15];
+    if (this._hasMeta(data)) {
+      this.version = data[3] * 256 + data[7];
+      this.stereo = data[11] === 1;
+      this.bits = data[15];
+    } else {
+      this.version = 65536;
+      this.stereo = true;
+      this.bits = 16;
+    }
     this.adapter = this.bits === 16 ? new Bit16() : new Bit24();
+  }
+
+  _hasMeta(data) {
+    let hasMeta = true;
+    // All these numbers should be black
+    [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14].forEach(v => {
+      if (data[v] !== 0) hasMeta = false;
+    });
+    if (data[11] > 2) hasMeta = false;
+    if (data[15] !== 16 && data[15] !== 24) hasMeta = false;
+
+    return hasMeta;
   }
 
   initializeAudio() {

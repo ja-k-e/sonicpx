@@ -176,13 +176,15 @@ var AudioPlayer = function () {
   _createClass(AudioPlayer, [{
     key: 'bindPlay',
     value: function bindPlay(handler) {
-      var _this = this;
-
-      this.$play.addEventListener('click', function (e) {
-        _this.disable();
+      var self = this;
+      this.$play.addEventListener('click', playHandler, false);
+      // Call once
+      function playHandler(e) {
         e.preventDefault();
+        e.target.removeEventListener(e.type, playHandler, false);
+        self.disable();
         handler();
-      });
+      }
     }
   }, {
     key: 'enable',
@@ -687,10 +689,29 @@ var ImageToAudio = function () {
       var _canvas$imageData = this.canvas.imageData(0, 0, 4, 1),
           data = _canvas$imageData.data;
 
-      this.version = data[3] * 256 + data[7];
-      this.stereo = data[11] === 1;
-      this.bits = data[15];
+      if (this._hasMeta(data)) {
+        this.version = data[3] * 256 + data[7];
+        this.stereo = data[11] === 1;
+        this.bits = data[15];
+      } else {
+        this.version = 65536;
+        this.stereo = true;
+        this.bits = 16;
+      }
       this.adapter = this.bits === 16 ? new _Bit2.default() : new _Bit4.default();
+    }
+  }, {
+    key: '_hasMeta',
+    value: function _hasMeta(data) {
+      var hasMeta = true;
+      // All these numbers should be black
+      [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14].forEach(function (v) {
+        if (data[v] !== 0) hasMeta = false;
+      });
+      if (data[11] > 2) hasMeta = false;
+      if (data[15] !== 16 && data[15] !== 24) hasMeta = false;
+
+      return hasMeta;
     }
   }, {
     key: 'initializeAudio',
@@ -817,39 +838,38 @@ var Recorder = function () {
       this.audio.progress(0);
       this.audio.disable();
       this.file.disable();
-      var element = new Audio();
-      element.setAttribute('crossorigin', 'anonymous');
-      element.src = target.result;
+      this.element = new Audio();
+      this.element.setAttribute('crossorigin', 'anonymous');
+      this.element.src = target.result;
       if (this.converter) this.converter.remove();
       this.audio.bindPlay(function () {
-        _this.initializeElement(element);
+        _this.initializeElement();
       });
-      element.addEventListener('canplay', function () {
+      this.element.addEventListener('canplay', function () {
         _this.audio.enable();
       });
     }
   }, {
     key: 'initializeElement',
-    value: function initializeElement(element) {
+    value: function initializeElement() {
       var _this2 = this;
 
-      this._recordElement(element);
-      element.addEventListener('ended', function () {
+      this._recordElement();
+      this.element.addEventListener('ended', function () {
         return _this2.converter.stop();
       });
     }
   }, {
     key: '_recordElement',
-    value: function _recordElement(element) {
+    value: function _recordElement() {
       var _this3 = this;
 
       var stereo = document.querySelector('#stereo').checked;
       this.converter = new _AudioToImage2.default({
-        duration: element.duration,
+        duration: this.element.duration,
         bits: 16,
         stereo: stereo
       });
-      this.element = element;
       this.input = _audioContext2.default.createMediaElementSource(this.element);
       var bufferSize = 8192,
           channels = stereo ? 2 : 1;
@@ -870,6 +890,9 @@ var Recorder = function () {
         _this3.input.disconnect(_audioContext2.default.destination);
         _this3.processor.disconnect(_audioContext2.default.destination);
         _this3.processor.onaudioprocess = null;
+        delete _this3.element;
+        delete _this3.input;
+        delete _this3.processor;
       };
       // connect our processor to the previous destination
       this.processor.connect(_audioContext2.default.destination);

@@ -20,31 +20,30 @@ export default class Recorder {
     this.audio.progress(0);
     this.audio.disable();
     this.file.disable();
-    let element = new Audio();
-    element.setAttribute('crossorigin', 'anonymous');
-    element.src = target.result;
+    this.element = new Audio();
+    this.element.setAttribute('crossorigin', 'anonymous');
+    this.element.src = target.result;
     if (this.converter) this.converter.remove();
     this.audio.bindPlay(() => {
-      this.initializeElement(element);
+      this.initializeElement();
     });
-    element.addEventListener('canplay', () => {
+    this.element.addEventListener('canplay', () => {
       this.audio.enable();
     });
   }
 
-  initializeElement(element) {
-    this._recordElement(element);
-    element.addEventListener('ended', () => this.converter.stop());
+  initializeElement() {
+    this._recordElement();
+    this.element.addEventListener('ended', () => this.converter.stop());
   }
 
-  _recordElement(element) {
+  _recordElement() {
     let stereo = document.querySelector('#stereo').checked;
     this.converter = new AudioToImage({
-      duration: element.duration,
+      duration: this.element.duration,
       bits: 16,
       stereo
     });
-    this.element = element;
     this.input = audioContext.createMediaElementSource(this.element);
     let bufferSize = 8192,
       channels = stereo ? 2 : 1;
@@ -69,6 +68,9 @@ export default class Recorder {
       this.input.disconnect(audioContext.destination);
       this.processor.disconnect(audioContext.destination);
       this.processor.onaudioprocess = null;
+      delete this.element;
+      delete this.input;
+      delete this.processor;
     };
     // connect our processor to the previous destination
     this.processor.connect(audioContext.destination);
