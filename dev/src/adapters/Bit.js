@@ -11,11 +11,8 @@ export default class Bit {
     return { rgbL, rgbR };
   }
 
-  // Optional right, will average if present, return left if not.
-  rgbMono(valueL, valueR = null) {
-    let value =
-        valueR === null ? valueL : Math.max(-1, Math.min(1, valueL + valueR)),
-      bytes = this._valToBytes(value),
+  rgbMono(value) {
+    let bytes = this._valToBytes(value),
       r = Math.floor(bytes / 256.0 / 256.0),
       g = Math.floor((bytes - r * 256.0 * 256.0) / 256.0),
       b = bytes % 256.0,

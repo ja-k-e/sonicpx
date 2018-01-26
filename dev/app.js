@@ -217,16 +217,10 @@ var Bit = function () {
           rgbR = this.rgbMono(valueR).rgb;
       return { rgbL: rgbL, rgbR: rgbR };
     }
-
-    // Optional right, will average if present, return left if not.
-
   }, {
     key: "rgbMono",
-    value: function rgbMono(valueL) {
-      var valueR = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-      var value = valueR === null ? valueL : Math.max(-1, Math.min(1, valueL + valueR)),
-          bytes = this._valToBytes(value),
+    value: function rgbMono(value) {
+      var bytes = this._valToBytes(value),
           r = Math.floor(bytes / 256.0 / 256.0),
           g = Math.floor((bytes - r * 256.0 * 256.0) / 256.0),
           b = bytes % 256.0,
