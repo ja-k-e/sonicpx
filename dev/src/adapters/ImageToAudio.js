@@ -12,6 +12,18 @@ export default class ImageToAudio {
 
   remove() {
     this.$parent.innerHTML = '';
+    this.source.stop();
+    this.source.disconnect(audioContext.destination);
+    this._playing = false;
+    delete this.source;
+  }
+
+  play(handleEnd) {
+    if (!this._playing) {
+      this.source.onended = () => handleEnd();
+      this.source.start();
+      this._playing = true;
+    }
   }
 
   initialize(image) {
@@ -19,7 +31,7 @@ export default class ImageToAudio {
     this.canvas.setSize(image.width, image.height);
     this.canvas.drawImage(image, 0, 0);
     this.loadMeta();
-    this.play();
+    this.initializeAudio();
   }
 
   loadMeta() {
@@ -30,17 +42,20 @@ export default class ImageToAudio {
     this.adapter = this.bits === 16 ? new Bit16() : new Bit24();
   }
 
-  play() {
-    let { w, wh, h } = this.canvas,
-      buffer;
+  initializeAudio() {
+    let { w, wh, h } = this.canvas;
 
     if (this.stereo) {
-      buffer = audioContext.createBuffer(2, wh * h, audioContext.sampleRate);
+      this.buffer = audioContext.createBuffer(
+        2,
+        wh * h,
+        audioContext.sampleRate
+      );
 
       let bitsL = this.canvas.imageData(0, 1, wh, h - 1).data,
         bitsR = this.canvas.imageData(wh, 1, wh, h - 1).data,
-        channelL = buffer.getChannelData(0),
-        channelR = buffer.getChannelData(1),
+        channelL = this.buffer.getChannelData(0),
+        channelR = this.buffer.getChannelData(1),
         len = bitsL.length;
       for (var i = 0; i < len; i += 4) {
         let channelIdx = Math.floor(i / 4),
@@ -61,10 +76,14 @@ export default class ImageToAudio {
         if (dRa === 255) channelR[channelIdx] = valueR;
       }
     } else {
-      buffer = audioContext.createBuffer(1, w * h, audioContext.sampleRate);
+      this.buffer = audioContext.createBuffer(
+        1,
+        w * h,
+        audioContext.sampleRate
+      );
 
       let bits = this.canvas.imageData(0, 1, w, h - 1).data,
-        channel = buffer.getChannelData(0),
+        channel = this.buffer.getChannelData(0),
         len = bits.length;
       for (var i = 0; i < len; i += 4) {
         let channelIdx = Math.floor(i / 4),
@@ -78,9 +97,8 @@ export default class ImageToAudio {
       }
     }
 
-    let source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.start();
+    this.source = audioContext.createBufferSource();
+    this.source.buffer = this.buffer;
+    this.source.connect(audioContext.destination);
   }
 }

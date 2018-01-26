@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -157,7 +157,76 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Bit2 = __webpack_require__(3);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AudioPlayer = function () {
+  function AudioPlayer(_ref) {
+    var $element = _ref.$element,
+        _ref$stream = _ref.stream,
+        stream = _ref$stream === undefined ? false : _ref$stream;
+
+    _classCallCheck(this, AudioPlayer);
+
+    this.stream = stream;
+    this.$element = $element;
+    this.$play = this.$element.querySelector('.play');
+    this.$progress = this.$element.querySelector('.progress > span');
+  }
+
+  _createClass(AudioPlayer, [{
+    key: 'bindPlay',
+    value: function bindPlay(handler) {
+      var _this = this;
+
+      this.$play.addEventListener('click', function (e) {
+        _this.disable();
+        e.preventDefault();
+        handler();
+      });
+    }
+  }, {
+    key: 'enable',
+    value: function enable() {
+      this.$element.classList.remove('disabled');
+    }
+  }, {
+    key: 'disable',
+    value: function disable() {
+      this.$element.classList.add('disabled');
+    }
+  }, {
+    key: 'progress',
+    value: function progress(rat) {
+      if (this.stream) {
+        if (rat === 'start') this.$element.classList.add('streaming');else if (rat === 'end') this.$element.classList.add('complete');else {
+          this.$element.classList.remove('streaming');
+          this.$element.classList.remove('complete');
+        }
+      } else {
+        this.$progress.style.width = rat * 100 + '%';
+      }
+    }
+  }]);
+
+  return AudioPlayer;
+}();
+
+exports.default = AudioPlayer;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Bit2 = __webpack_require__(4);
 
 var _Bit3 = _interopRequireDefault(_Bit2);
 
@@ -191,7 +260,7 @@ var Bit16 = function (_Bit) {
 exports.default = Bit16;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -264,7 +333,7 @@ var Bit = function () {
 exports.default = Bit;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -276,7 +345,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Bit2 = __webpack_require__(3);
+var _Bit2 = __webpack_require__(4);
 
 var _Bit3 = _interopRequireDefault(_Bit2);
 
@@ -310,7 +379,7 @@ var Bit24 = function (_Bit) {
 exports.default = Bit24;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -333,21 +402,34 @@ var File = function () {
     _classCallCheck(this, File);
 
     this.handleChange = handleChange;
-    this.initDOM(accept, $parent);
+    this.accept = accept;
+    this.$parent = $parent;
+    this.initDOM();
   }
 
   _createClass(File, [{
+    key: 'disable',
+    value: function disable() {
+      this.$parent.classList.add('disabled');
+    }
+  }, {
+    key: 'enable',
+    value: function enable() {
+      this.$parent.classList.remove('disabled');
+    }
+  }, {
     key: 'initDOM',
-    value: function initDOM(accept, $parent) {
+    value: function initDOM() {
       var _this = this;
 
       this.$container = document.createElement('div');
       this.$container.className = 'file-upload';
-      $parent.appendChild(this.$container);
+      this.$parent.appendChild(this.$container);
 
       this.$file = document.createElement('input');
       this.$file.setAttribute('type', 'file');
-      this.$file.setAttribute('accept', accept);
+      this.$file.setAttribute('accept', this.accept);
+      this.$file.setAttribute('required', '');
       this.$container.appendChild(this.$file);
 
       this.$container.addEventListener('dragover', function () {
@@ -358,16 +440,21 @@ var File = function () {
       });
 
       this.$file.addEventListener('change', function () {
+        _this.$parent.classList.remove('is-active');
         _this.$container.classList.remove('is-active');
         if (_this.$file.files && _this.$file.files[0]) {
-          var reader = new FileReader();
+          var reader = new FileReader(),
+              accept = _this.accept.replace(/\*/, ''),
+              file = _this.$file.files[0];
           reader.onload = function (_ref2) {
             var target = _ref2.target;
 
-            _this.handleChange(target, _this.$file.files[0]);
+            _this.handleChange(target, file);
             _this.$file.value = '';
           };
-          reader.readAsDataURL(_this.$file.files[0]);
+          if (file && file.type.match(accept)) reader.readAsDataURL(file);else _this.$file.value = '';
+        } else {
+          _this.$file.value = '';
         }
       });
     }
@@ -379,13 +466,13 @@ var File = function () {
 exports.default = File;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _App = __webpack_require__(7);
+var _App = __webpack_require__(8);
 
 var _App2 = _interopRequireDefault(_App);
 
@@ -398,7 +485,7 @@ console.info('\n%cSonicPX v' + VERSION + '\n%c\xA9 Jake Albaugh ' + new Date().g
 new _App2.default();
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -408,11 +495,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Player = __webpack_require__(8);
+var _Player = __webpack_require__(9);
 
 var _Player2 = _interopRequireDefault(_Player);
 
-var _Recorder = __webpack_require__(10);
+var _Recorder = __webpack_require__(11);
 
 var _Recorder2 = _interopRequireDefault(_Recorder);
 
@@ -428,71 +515,6 @@ var App = function App() {
 };
 
 exports.default = App;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _audioContext = __webpack_require__(0);
-
-var _audioContext2 = _interopRequireDefault(_audioContext);
-
-var _Canvas = __webpack_require__(1);
-
-var _Canvas2 = _interopRequireDefault(_Canvas);
-
-var _ImageToAudio = __webpack_require__(9);
-
-var _ImageToAudio2 = _interopRequireDefault(_ImageToAudio);
-
-var _File = __webpack_require__(5);
-
-var _File2 = _interopRequireDefault(_File);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Player = function () {
-  function Player() {
-    _classCallCheck(this, Player);
-
-    this.converter = new _ImageToAudio2.default();
-    this.file = new _File2.default({
-      accept: 'image/*',
-      $parent: document.querySelector('.player .file'),
-      handleChange: this.handleFileChange.bind(this)
-    });
-  }
-
-  _createClass(Player, [{
-    key: 'handleFileChange',
-    value: function handleFileChange(target, file) {
-      var _this = this;
-
-      this.converter.remove();
-      var sized = new Image(),
-          data = target.result;
-      sized.onload = function () {
-        return _this.converter.initialize(sized);
-      };
-      sized.setAttribute('src', data);
-    }
-  }]);
-
-  return Player;
-}();
-
-exports.default = Player;
 
 /***/ }),
 /* 9 */
@@ -511,123 +533,82 @@ var _audioContext = __webpack_require__(0);
 
 var _audioContext2 = _interopRequireDefault(_audioContext);
 
+var _AudioPlayer = __webpack_require__(2);
+
+var _AudioPlayer2 = _interopRequireDefault(_AudioPlayer);
+
 var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _Bit = __webpack_require__(2);
+var _ImageToAudio = __webpack_require__(10);
 
-var _Bit2 = _interopRequireDefault(_Bit);
+var _ImageToAudio2 = _interopRequireDefault(_ImageToAudio);
 
-var _Bit3 = __webpack_require__(4);
+var _File = __webpack_require__(6);
 
-var _Bit4 = _interopRequireDefault(_Bit3);
+var _File2 = _interopRequireDefault(_File);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var SECONDS_PER_CANVAS = 5;
+var Player = function () {
+  function Player() {
+    _classCallCheck(this, Player);
 
-var ImageToAudio = function () {
-  function ImageToAudio() {
-    _classCallCheck(this, ImageToAudio);
-
-    this.$parent = document.querySelector('.player .input');
+    this.audio = new _AudioPlayer2.default({
+      $element: document.querySelector('.player .audio'),
+      stream: true
+    });
+    this.file = new _File2.default({
+      accept: 'image/*',
+      $parent: document.querySelector('.player .file'),
+      handleChange: this.handleFileChange.bind(this)
+    });
   }
 
-  _createClass(ImageToAudio, [{
-    key: 'remove',
-    value: function remove() {
-      this.$parent.innerHTML = '';
+  _createClass(Player, [{
+    key: 'handleFileChange',
+    value: function handleFileChange(target, file) {
+      var _this = this;
+
+      this.file.disable();
+      this.audio.progress('reset');
+      this.audio.disable();
+      if (this.converter) this.converter.remove();
+      this.converter = new _ImageToAudio2.default();
+      var sized = new Image(),
+          data = target.result;
+      sized.onload = function () {
+        _this.converter.initialize(sized);
+        _this.audio.enable();
+        _this.audio.bindPlay(_this.handlePlay.bind(_this));
+      };
+      sized.setAttribute('src', data);
     }
   }, {
-    key: 'initialize',
-    value: function initialize(image) {
-      this.canvas = new _Canvas2.default(this.$parent);
-      this.canvas.setSize(image.width, image.height);
-      this.canvas.drawImage(image, 0, 0);
-      this.loadMeta();
-      this.play();
+    key: 'handlePlay',
+    value: function handlePlay() {
+      var _this2 = this;
+
+      this.audio.progress('start');
+      this.converter.play(function () {
+        return _this2.handleEnd();
+      });
     }
   }, {
-    key: 'loadMeta',
-    value: function loadMeta() {
-      var _canvas$imageData = this.canvas.imageData(0, 0, 4, 1),
-          data = _canvas$imageData.data;
-
-      this.version = data[3] * 256 + data[7];
-      this.stereo = data[11] === 1;
-      this.bits = data[15];
-      this.adapter = this.bits === 16 ? new _Bit2.default() : new _Bit4.default();
-    }
-  }, {
-    key: 'play',
-    value: function play() {
-      var _canvas = this.canvas,
-          w = _canvas.w,
-          wh = _canvas.wh,
-          h = _canvas.h,
-          buffer = void 0;
-
-
-      if (this.stereo) {
-        buffer = _audioContext2.default.createBuffer(2, wh * h, _audioContext2.default.sampleRate);
-
-        var bitsL = this.canvas.imageData(0, 1, wh, h - 1).data,
-            bitsR = this.canvas.imageData(wh, 1, wh, h - 1).data,
-            channelL = buffer.getChannelData(0),
-            channelR = buffer.getChannelData(1),
-            len = bitsL.length;
-        for (var i = 0; i < len; i += 4) {
-          var channelIdx = Math.floor(i / 4),
-              dLr = bitsL[i + 0],
-              dLg = bitsL[i + 1],
-              dLb = bitsL[i + 2],
-              dLa = bitsL[i + 3],
-              dRr = bitsR[i + 0],
-              dRg = bitsR[i + 1],
-              dRb = bitsR[i + 2],
-              dRa = bitsR[i + 3];
-
-          var _adapter$valueStereo = this.adapter.valueStereo([dLr, dLg, dLb], [dRr, dRg, dRb]),
-              valueL = _adapter$valueStereo.valueL,
-              valueR = _adapter$valueStereo.valueR;
-
-          if (dLa === 255) channelL[channelIdx] = valueL;
-          if (dRa === 255) channelR[channelIdx] = valueR;
-        }
-      } else {
-        buffer = _audioContext2.default.createBuffer(1, w * h, _audioContext2.default.sampleRate);
-
-        var bits = this.canvas.imageData(0, 1, w, h - 1).data,
-            channel = buffer.getChannelData(0),
-            _len = bits.length;
-        for (var i = 0; i < _len; i += 4) {
-          var _channelIdx = Math.floor(i / 4),
-              dr = bits[i + 0],
-              dg = bits[i + 1],
-              db = bits[i + 2],
-              da = bits[i + 3],
-              _adapter$valueMono = this.adapter.valueMono([dr, dg, db]),
-              value = _adapter$valueMono.value;
-
-
-          if (da === 255) channel[_channelIdx] = value;
-        }
-      }
-
-      var source = _audioContext2.default.createBufferSource();
-      source.buffer = buffer;
-      source.connect(_audioContext2.default.destination);
-      source.start();
+    key: 'handleEnd',
+    value: function handleEnd() {
+      this.file.enable();
+      this.audio.progress('end');
     }
   }]);
 
-  return ImageToAudio;
+  return Player;
 }();
 
-exports.default = ImageToAudio;
+exports.default = Player;
 
 /***/ }),
 /* 10 */
@@ -650,11 +631,163 @@ var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _AudioToImage = __webpack_require__(11);
+var _Bit = __webpack_require__(3);
+
+var _Bit2 = _interopRequireDefault(_Bit);
+
+var _Bit3 = __webpack_require__(5);
+
+var _Bit4 = _interopRequireDefault(_Bit3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SECONDS_PER_CANVAS = 5;
+
+var ImageToAudio = function () {
+  function ImageToAudio() {
+    _classCallCheck(this, ImageToAudio);
+
+    this.$parent = document.querySelector('.player .input');
+  }
+
+  _createClass(ImageToAudio, [{
+    key: 'remove',
+    value: function remove() {
+      this.$parent.innerHTML = '';
+      this.source.stop();
+      this.source.disconnect(_audioContext2.default.destination);
+      this._playing = false;
+      delete this.source;
+    }
+  }, {
+    key: 'play',
+    value: function play(handleEnd) {
+      if (!this._playing) {
+        this.source.onended = function () {
+          return handleEnd();
+        };
+        this.source.start();
+        this._playing = true;
+      }
+    }
+  }, {
+    key: 'initialize',
+    value: function initialize(image) {
+      this.canvas = new _Canvas2.default(this.$parent);
+      this.canvas.setSize(image.width, image.height);
+      this.canvas.drawImage(image, 0, 0);
+      this.loadMeta();
+      this.initializeAudio();
+    }
+  }, {
+    key: 'loadMeta',
+    value: function loadMeta() {
+      var _canvas$imageData = this.canvas.imageData(0, 0, 4, 1),
+          data = _canvas$imageData.data;
+
+      this.version = data[3] * 256 + data[7];
+      this.stereo = data[11] === 1;
+      this.bits = data[15];
+      this.adapter = this.bits === 16 ? new _Bit2.default() : new _Bit4.default();
+    }
+  }, {
+    key: 'initializeAudio',
+    value: function initializeAudio() {
+      var _canvas = this.canvas,
+          w = _canvas.w,
+          wh = _canvas.wh,
+          h = _canvas.h;
+
+
+      if (this.stereo) {
+        this.buffer = _audioContext2.default.createBuffer(2, wh * h, _audioContext2.default.sampleRate);
+
+        var bitsL = this.canvas.imageData(0, 1, wh, h - 1).data,
+            bitsR = this.canvas.imageData(wh, 1, wh, h - 1).data,
+            channelL = this.buffer.getChannelData(0),
+            channelR = this.buffer.getChannelData(1),
+            len = bitsL.length;
+        for (var i = 0; i < len; i += 4) {
+          var channelIdx = Math.floor(i / 4),
+              dLr = bitsL[i + 0],
+              dLg = bitsL[i + 1],
+              dLb = bitsL[i + 2],
+              dLa = bitsL[i + 3],
+              dRr = bitsR[i + 0],
+              dRg = bitsR[i + 1],
+              dRb = bitsR[i + 2],
+              dRa = bitsR[i + 3];
+
+          var _adapter$valueStereo = this.adapter.valueStereo([dLr, dLg, dLb], [dRr, dRg, dRb]),
+              valueL = _adapter$valueStereo.valueL,
+              valueR = _adapter$valueStereo.valueR;
+
+          if (dLa === 255) channelL[channelIdx] = valueL;
+          if (dRa === 255) channelR[channelIdx] = valueR;
+        }
+      } else {
+        this.buffer = _audioContext2.default.createBuffer(1, w * h, _audioContext2.default.sampleRate);
+
+        var bits = this.canvas.imageData(0, 1, w, h - 1).data,
+            channel = this.buffer.getChannelData(0),
+            _len = bits.length;
+        for (var i = 0; i < _len; i += 4) {
+          var _channelIdx = Math.floor(i / 4),
+              dr = bits[i + 0],
+              dg = bits[i + 1],
+              db = bits[i + 2],
+              da = bits[i + 3],
+              _adapter$valueMono = this.adapter.valueMono([dr, dg, db]),
+              value = _adapter$valueMono.value;
+
+
+          if (da === 255) channel[_channelIdx] = value;
+        }
+      }
+
+      this.source = _audioContext2.default.createBufferSource();
+      this.source.buffer = this.buffer;
+      this.source.connect(_audioContext2.default.destination);
+    }
+  }]);
+
+  return ImageToAudio;
+}();
+
+exports.default = ImageToAudio;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _audioContext = __webpack_require__(0);
+
+var _audioContext2 = _interopRequireDefault(_audioContext);
+
+var _AudioPlayer = __webpack_require__(2);
+
+var _AudioPlayer2 = _interopRequireDefault(_AudioPlayer);
+
+var _AudioToImage = __webpack_require__(12);
 
 var _AudioToImage2 = _interopRequireDefault(_AudioToImage);
 
-var _File = __webpack_require__(5);
+var _Canvas = __webpack_require__(1);
+
+var _Canvas2 = _interopRequireDefault(_Canvas);
+
+var _File = __webpack_require__(6);
 
 var _File2 = _interopRequireDefault(_File);
 
@@ -666,6 +799,9 @@ var Recorder = function () {
   function Recorder() {
     _classCallCheck(this, Recorder);
 
+    this.audio = new _AudioPlayer2.default({
+      $element: document.querySelector('.recorder .audio')
+    });
     this.file = new _File2.default({
       accept: 'audio/*',
       $parent: document.querySelector('.recorder .file'),
@@ -678,12 +814,18 @@ var Recorder = function () {
     value: function handleFileChange(target, file) {
       var _this = this;
 
+      this.audio.progress(0);
+      this.audio.disable();
+      this.file.disable();
       var element = new Audio();
       element.setAttribute('crossorigin', 'anonymous');
       element.src = target.result;
       if (this.converter) this.converter.remove();
-      element.addEventListener('canplay', function () {
+      this.audio.bindPlay(function () {
         _this.initializeElement(element);
+      });
+      element.addEventListener('canplay', function () {
+        _this.audio.enable();
       });
     }
   }, {
@@ -709,17 +851,20 @@ var Recorder = function () {
       });
       this.element = element;
       this.input = _audioContext2.default.createMediaElementSource(this.element);
-      var bufferSize = 4096,
+      var bufferSize = 8192,
           channels = stereo ? 2 : 1;
       this.processor = _audioContext2.default.createScriptProcessor(bufferSize, channels, channels);
       // specify the processing function
       this.processor.onaudioprocess = function (data) {
-        return _this3.converter.process(data);
+        _this3.audio.progress(_this3.element.currentTime / _this3.element.duration);
+        _this3.converter.process(data);
       };
       // connect stream to our processor
       this.input.connect(this.processor);
       this.input.connect(_audioContext2.default.destination);
       this.element.onended = function () {
+        _this3.audio.progress(1);
+        _this3.file.enable();
         _this3.converter.handleEnd();
         _this3.input.disconnect(_this3.processor);
         _this3.input.disconnect(_audioContext2.default.destination);
@@ -738,7 +883,7 @@ var Recorder = function () {
 exports.default = Recorder;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -758,11 +903,11 @@ var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _Bit = __webpack_require__(2);
+var _Bit = __webpack_require__(3);
 
 var _Bit2 = _interopRequireDefault(_Bit);
 
-var _Bit3 = __webpack_require__(4);
+var _Bit3 = __webpack_require__(5);
 
 var _Bit4 = _interopRequireDefault(_Bit3);
 

@@ -1,6 +1,7 @@
 $font: 'Roboto', BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto',
   'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
   'Helvetica', 'Arial', sans-serif;
+$header-h: 36px;
 
 html,
 body {
@@ -24,6 +25,9 @@ body {
       }
     }
   }
+  header {
+    height: $header-h;
+  }
   main {
     height: 100%;
     width: 100%;
@@ -37,21 +41,58 @@ body {
       flex-direction: column;
       .file {
         height: 100px;
+        transition: height 250ms ease-in-out 50ms,
+          margin-top 250ms ease-in-out 300ms;
+        .file-upload {
+          transition: opacity 50ms ease-in-out;
+        }
+        &.disabled {
+          margin-top: 0;
+          height: 0px;
+          .file-upload {
+            opacity: 0;
+          }
+        }
       }
-      div:not(.file) {
+      div:not(.file):not(.audio) {
         flex: 1;
       }
       > * + * {
         margin-top: 1rem;
       }
-      .file-upload {
+      .file {
         background: #f0f0f0;
       }
       &.player {
         background: #121212;
-        .file-upload {
+        .file {
           background: #2f2f2f;
           color: white;
+        }
+      }
+      .audio {
+        a {
+          background: black;
+          color: white;
+        }
+        .progress {
+          background: #f0f0f0;
+          span {
+            background: tomato;
+          }
+        }
+      }
+      &.player {
+        .audio {
+          a {
+            background: tomato;
+          }
+          .progress {
+            background: #222;
+            span {
+              background: #444;
+            }
+          }
         }
       }
       &,
@@ -67,7 +108,6 @@ body {
 }
 
 span.checkbox {
-  $h: 36px;
   $w: 80px;
   position: relative;
   display: block;
@@ -79,8 +119,8 @@ span.checkbox {
     display: flex;
     &::before,
     &::after {
-      line-height: $h;
-      height: $h;
+      line-height: $header-h;
+      height: $header-h;
       width: $w;
       text-align: center;
     }
@@ -96,21 +136,21 @@ span.checkbox {
       display: block;
       position: relative;
       width: $w;
-      height: $h;
-      line-height: $h;
+      height: $header-h;
+      line-height: $header-h;
       background: tomato;
-      border-radius: $h * 0.5;
+      border-radius: $header-h * 0.5;
       &::after {
         content: '';
         display: block;
-        height: $h - 4;
+        height: $header-h - 4;
         position: absolute;
-        border-radius: $h * 0.5;
+        border-radius: $header-h * 0.5;
         z-index: 2;
         transition: left 150ms ease-in-out;
         left: 2px;
         top: 2px;
-        width: $h - 4;
+        width: $header-h - 4;
         background: white;
       }
     }
@@ -130,7 +170,7 @@ span.checkbox {
       + label span {
         background: tomato;
         &::after {
-          left: calc(100% - #{$h - 2px});
+          left: calc(100% - #{$header-h - 2px});
         }
       }
     }
@@ -154,6 +194,62 @@ canvas {
   width: 100%;
   height: auto;
   display: block;
+}
+
+$audio-h: 20px;
+.audio {
+  height: $audio-h;
+  user-select: none;
+  display: flex;
+  a {
+    width: $audio-h;
+    height: $audio-h;
+    display: block;
+    text-align: center;
+    line-height: $audio-h;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  @keyframes move-audio-progress {
+    from {
+      left: 0;
+    }
+    to {
+      left: calc(100% - #{$audio-h * 0.25});
+    }
+  }
+  &.streaming {
+    .progress span {
+      width: $audio-h * 0.25;
+      position: absolute;
+      top: 0;
+    }
+    &.complete {
+      .progress span {
+        width: 100%;
+        background: tomato;
+      }
+    }
+    &:not(.complete) {
+      .progress span {
+        animation: move-audio-progress 1000ms ease-in-out infinite alternate;
+      }
+    }
+  }
+  .progress {
+    position: relative;
+    flex: 1;
+    span {
+      transition: width 100ms linear;
+      height: 100%;
+      display: block;
+      width: 0;
+    }
+  }
+  &.disabled a {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 }
 
 .file-upload {
