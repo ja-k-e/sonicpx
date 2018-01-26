@@ -66,13 +66,6 @@ body {
       .file {
         background: #f0f0f0;
       }
-      &.player {
-        background: #121212;
-        .file {
-          background: #2f2f2f;
-          color: white;
-        }
-      }
       .audio {
         a {
           background: black;
@@ -86,12 +79,17 @@ body {
         }
       }
       &.player {
+        background: #242424;
+        .file {
+          background: #343434;
+          color: white;
+        }
         .audio {
           a {
             background: tomato;
           }
           .progress {
-            background: #222;
+            background: #343434;
             span {
               background: #444;
             }
@@ -125,6 +123,9 @@ span.checkbox {
       height: $header-h;
       width: $checkbox-w;
       text-align: center;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.125em;
     }
     &::before {
       color: #000;
@@ -268,6 +269,9 @@ canvas {
   }
   &::after {
     position: absolute;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.125em;
     top: 50%;
     left: 0;
     width: 100%;
