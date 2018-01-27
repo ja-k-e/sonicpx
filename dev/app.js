@@ -804,6 +804,10 @@ var _AudioToImage = __webpack_require__(12);
 
 var _AudioToImage2 = _interopRequireDefault(_AudioToImage);
 
+var _AudioToImageCompressed = __webpack_require__(13);
+
+var _AudioToImageCompressed2 = _interopRequireDefault(_AudioToImageCompressed);
+
 var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
@@ -865,7 +869,7 @@ var Recorder = function () {
       var _this3 = this;
 
       var stereo = document.querySelector('#stereo').checked;
-      this.converter = new _AudioToImage2.default({
+      this.converter = new _AudioToImageCompressed2.default({
         duration: this.element.duration,
         bits: 16,
         stereo: stereo
@@ -1109,6 +1113,295 @@ var AudioToImage = function () {
 }();
 
 exports.default = AudioToImage;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _audioContext = __webpack_require__(0);
+
+var _audioContext2 = _interopRequireDefault(_audioContext);
+
+var _Canvas = __webpack_require__(1);
+
+var _Canvas2 = _interopRequireDefault(_Canvas);
+
+var _Bit16Compressed = __webpack_require__(14);
+
+var _Bit16Compressed2 = _interopRequireDefault(_Bit16Compressed);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SECONDS_PER_CANVAS = 5,
+    VERSION = 1;
+
+var AudioToImageCompressed = function () {
+  function AudioToImageCompressed(_ref) {
+    var duration = _ref.duration,
+        bits = _ref.bits,
+        _ref$stereo = _ref.stereo,
+        stereo = _ref$stereo === undefined ? true : _ref$stereo;
+
+    _classCallCheck(this, AudioToImageCompressed);
+
+    this.bits = bits;
+    // TODO: no 24
+    this.adapter = bits === 16 ? new _Bit16Compressed2.default() : new _Bit16Compressed2.default();
+    this.$parent = document.querySelector('.recorder .output');
+    this.stereo = stereo;
+    this.initialize(duration);
+    this.off = false;
+    this.tick = 0;
+    this.imageData = null;
+  }
+
+  _createClass(AudioToImageCompressed, [{
+    key: 'initialize',
+    value: function initialize(duration) {
+      this.canvasesIdx = 0;
+      this.canvases = [];
+      // We are compressing to ~66.67%, three samples per two pixels
+      var relDuration = Math.ceil(duration * 0.66666667),
+          pixelCount = Math.ceil(relDuration * _audioContext2.default.sampleRate),
+          di = Math.floor(Math.sqrt(pixelCount)),
+          w = this.stereo ? di * 2 : di,
+          wh = this.stereo ? w * 0.5 : w,
+          h = Math.ceil(pixelCount / wh),
+          canvasCount = Math.ceil(relDuration / SECONDS_PER_CANVAS),
+          cvsH = Math.ceil(h / canvasCount),
+          cvsLastH = canvasCount === 1 ? h : h - cvsH * (canvasCount - 1);
+      for (var i = 0; i < canvasCount; i++) {
+        var canvas = new _Canvas2.default(this.$parent),
+            ch = i === canvasCount - 1 ? cvsLastH : cvsH;
+        canvas.setSize(w, ch);
+        this.canvases.push(canvas);
+      }
+    }
+  }, {
+    key: 'remove',
+    value: function remove() {
+      this.$parent.innerHTML = '';
+    }
+  }, {
+    key: 'handleEnd',
+    value: function handleEnd() {
+      this.canvas.putImage(this.imageData, 0, 0);
+      var canvas = new _Canvas2.default(),
+          totalW = this.canvases[0].w,
+          firstH = this.canvases[0].h,
+          totalH = this.canvases.map(function (a) {
+        return a.h;
+      }).reduce(function (a, b) {
+        return a + b;
+      });
+      canvas.setSize(totalW, totalH + 1);
+      // Storing metadata in alpha channel of first four pixels
+      var meta = new _Canvas2.default().createImage(4, 1);
+      meta.data[3] = Math.floor(VERSION / 256);
+      meta.data[7] = VERSION % 256;
+      meta.data[11] = this.stereo ? 1 : 0;
+      meta.data[15] = this.bits;
+      canvas.putImage(meta, 0, 0);
+      for (var i = 0; i < this.canvases.length; i++) {
+        var cvs = this.canvases[i],
+            y = i * firstH,
+            d = cvs.imageData(0, 0);
+        canvas.putImage(d, 0, y + 1);
+      }
+      this.$parent.innerHTML = '';
+      this.$parent.appendChild(canvas.cvs);
+    }
+  }, {
+    key: 'stop',
+    value: function stop() {
+      this.off = true;
+    }
+  }, {
+    key: 'process',
+    value: function process(data) {
+      if (this.off) return;
+      if (!this.imageData) this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
+
+      if (this.stereo) {
+        var left = data.inputBuffer.getChannelData(0),
+            right = data.inputBuffer.getChannelData(1),
+            len = right.length;
+        for (var i = 0; i < len; i += 3) {
+          if (this.off) return;
+
+          var _tickPosition = this.tickPosition(),
+              x = _tickPosition.x,
+              y = _tickPosition.y;
+          // The image data starting index
+
+
+          var idxL = y * this.canvas.w * 4 + x * 4,
+              idxR = idxL + this.canvas.wh * 4,
+              lefts = [left[i], left[i + 1], left[i + 2]],
+              rights = [right[i], right[i + 1], right[i + 2]],
+              _adapter$rgbsStereo = this.adapter.rgbsStereo(lefts, rights),
+              rgbsL = _adapter$rgbsStereo.rgbsL,
+              rgbsR = _adapter$rgbsStereo.rgbsR;
+          // Setting Left channel
+          this.setDataAtIndex(idxL, rgbsL);
+          // Setting Right channel
+          this.setDataAtIndex(idxR, rgbsR);
+
+          this.tick += 3;
+        }
+      } else {
+        var channel = data.inputBuffer.getChannelData(0),
+            _len = channel.length;
+        for (var _i = 0; _i < _len; _i++) {
+          if (this.off) return;
+
+          var _tickPosition2 = this.tickPosition(),
+              x = _tickPosition2.x,
+              y = _tickPosition2.y;
+
+          var idx = y * this.canvas.w * 4 + x * 4,
+              _adapter$rgbMono = this.adapter.rgbMono(channel[_i]),
+              rgb = _adapter$rgbMono.rgb;
+          // Setting the only channel
+          this.setDataAtIndex(idx, rgb);
+
+          this.tick++;
+        }
+      }
+    }
+  }, {
+    key: 'setDataAtIndex',
+    value: function setDataAtIndex(idx, rgbs) {
+      if (!rgbs) return;
+      var px1 = rgbs[0],
+          px2 = rgbs[1];
+      this.imageData.data[idx + 0] = px1[0];
+      this.imageData.data[idx + 1] = px1[1];
+      this.imageData.data[idx + 2] = px1[2];
+      this.imageData.data[idx + 3] = 255;
+      this.imageData.data[idx + 4] = px2[0];
+      this.imageData.data[idx + 5] = px2[1];
+      this.imageData.data[idx + 6] = px2[2];
+      this.imageData.data[idx + 7] = 255;
+    }
+  }, {
+    key: 'tickPosition',
+    value: function tickPosition() {
+      var xFactor = this.stereo ? this.canvas.wh : this.canvas.w,
+          x = this.tick % xFactor,
+          y = Math.floor(this.tick / xFactor);
+      if (y !== this.lastY && y > this.canvas.h) {
+        this.canvas.putImage(this.imageData, 0, 0);
+        this.nextCanvas();
+        this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
+        this.tick = 0;
+      }
+      this.lastY = y;
+      return { x: x, y: y };
+    }
+  }, {
+    key: 'nextCanvas',
+    value: function nextCanvas() {
+      this.canvasesIdx++;
+    }
+  }, {
+    key: 'canvas',
+    get: function get() {
+      return this.canvases[this.canvasesIdx];
+    }
+  }]);
+
+  return AudioToImageCompressed;
+}();
+
+exports.default = AudioToImageCompressed;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Bit16Compressed = function () {
+  function Bit16Compressed() {
+    _classCallCheck(this, Bit16Compressed);
+  }
+
+  _createClass(Bit16Compressed, [{
+    key: "rgbsStereo",
+    value: function rgbsStereo(valuesL, valuesR) {
+      var rgbsL = this.rgbsMono(valuesL).rgb,
+          rgbsR = this.rgbsMono(valuesR).rgb;
+      return { rgbsL: rgbsL, rgbsR: rgbsR };
+    }
+  }, {
+    key: "rgbsMono",
+    value: function rgbsMono(values) {
+      var _this = this;
+
+      var rgbs = [[], []];
+      values.forEach(function (value, i) {
+        var bytes = _this._valToBytes(value);
+        rgbs[0][i] = Math.floor(bytes / 256.0);
+        rgbs[1][i] = bytes % 256.0;
+      });
+      return { rgbs: rgbs };
+    }
+  }, {
+    key: "valueStereo",
+    value: function valueStereo(rgbL, rgbR) {
+      var valueL = this.valueMono(rgbL).value,
+          valueR = this.valueMono(rgbR).value;
+      return { valueL: valueL, valueR: valueR };
+    }
+  }, {
+    key: "valueMono",
+    value: function valueMono(rgb) {
+      var bytes = rgb[0] * 256.0 * 256.0 + rgb[1] * 256.0 + rgb[2],
+          value = this._bytesToVal(bytes);
+      return { value: value };
+    }
+  }, {
+    key: "_valToBytes",
+    value: function _valToBytes(value) {
+      return value * this.bitsH + this.bitsH;
+    }
+  }, {
+    key: "_bytesToVal",
+    value: function _bytesToVal(bytes) {
+      return bytes / this.bits * 2.0 - 1.0;
+    }
+  }, {
+    key: "bitsH",
+    get: function get() {
+      return this.bits * 0.5;
+    }
+  }]);
+
+  return Bit16Compressed;
+}();
+
+exports.default = Bit16Compressed;
 
 /***/ })
 /******/ ]);
