@@ -57,19 +57,18 @@ body {
           padding: 0.125rem 1rem;
         }
         @media (min-width: 600px) {
-          li {
-            width: auto;
-          }
+          width: auto;
           a {
             padding: 0.5rem 1rem;
             height: $nav-h;
-            line-height: $nav-h;
+            line-height: calc(#{$nav-h} - 1rem);
           }
         }
         &:first-child {
           border-left: 2px solid #f0f0f0;
         }
         a {
+          box-sizing: border-box;
           text-decoration: none;
           display: block;
           text-transform: uppercase;

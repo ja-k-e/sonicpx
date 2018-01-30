@@ -553,18 +553,35 @@ var App = function () {
       });
     }
   }, {
-    key: 'processHash',
-    value: function processHash() {
-      var hash = window.location.hash;
-      if (hash === '#player') this.$navPlayer.click();else if (hash === '#file') this.$navFile.click();else if (hash === '#mic') this.$navMic.click();
-    }
-  }, {
-    key: 'handleNav',
-    value: function handleNav(e, $el) {
+    key: 'deactivate',
+    value: function deactivate() {
       var $existingNav = this.$nav.querySelector('nav a.active'),
           $existingSection = document.querySelector('section.active');
       if ($existingNav) $existingNav.classList.remove('active');
       if ($existingSection) $existingSection.classList.remove('active');
+    }
+  }, {
+    key: 'processHash',
+    value: function processHash() {
+      var hash = window.location.hash;
+      var $link = {
+        '#player': this.$navPlayer,
+        '#file': this.$navFile,
+        '#mic': this.$navMic
+      }[hash];
+      var $section = {
+        '#player': this.$player,
+        '#file': this.$file,
+        '#mic': this.$mic
+      }[hash];
+      this.deactivate();
+      if ($link) $link.classList.add('active');
+      if ($section) $section.classList.add('active');
+    }
+  }, {
+    key: 'handleNav',
+    value: function handleNav(e, $el) {
+      this.deactivate();
       e.target.classList.add('active');
       $el.classList.add('active');
     }

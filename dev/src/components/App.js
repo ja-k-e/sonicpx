@@ -33,18 +33,32 @@ export default class App {
     });
   }
 
-  processHash() {
-    let hash = window.location.hash;
-    if (hash === '#player') this.$navPlayer.click();
-    else if (hash === '#file') this.$navFile.click();
-    else if (hash === '#mic') this.$navMic.click();
-  }
-
-  handleNav(e, $el) {
+  deactivate() {
     let $existingNav = this.$nav.querySelector('nav a.active'),
       $existingSection = document.querySelector('section.active');
     if ($existingNav) $existingNav.classList.remove('active');
     if ($existingSection) $existingSection.classList.remove('active');
+  }
+
+  processHash() {
+    let hash = window.location.hash;
+    let $link = {
+      '#player': this.$navPlayer,
+      '#file': this.$navFile,
+      '#mic': this.$navMic
+    }[hash];
+    let $section = {
+      '#player': this.$player,
+      '#file': this.$file,
+      '#mic': this.$mic
+    }[hash];
+    this.deactivate();
+    if ($link) $link.classList.add('active');
+    if ($section) $section.classList.add('active');
+  }
+
+  handleNav(e, $el) {
+    this.deactivate();
     e.target.classList.add('active');
     $el.classList.add('active');
   }
