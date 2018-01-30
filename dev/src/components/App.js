@@ -52,7 +52,7 @@ export default class App {
       '#file': this.$file,
       '#mic': this.$mic
     }[hash];
-    this.deactivate();
+    if ($section) this.deactivate();
     if ($link) $link.classList.add('active');
     if ($section) $section.classList.add('active');
   }
