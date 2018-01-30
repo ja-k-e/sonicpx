@@ -4,14 +4,15 @@ import AudioToImage from '../adapters/AudioToImage';
 import Canvas from './Canvas';
 import File from './File';
 
-export default class Recorder {
+export default class RecordFile {
   constructor() {
+    this.$output = document.querySelector('.recorder-file .output');
     this.audio = new AudioPlayer({
-      $element: document.querySelector('.recorder .audio')
+      $element: document.querySelector('.recorder-file .audio')
     });
     this.file = new File({
       accept: 'audio/*',
-      $parent: document.querySelector('.recorder .file'),
+      $parent: document.querySelector('.recorder-file .file'),
       handleChange: this.handleFileChange.bind(this)
     });
   }
@@ -23,30 +24,36 @@ export default class Recorder {
     this.element = new Audio();
     this.element.setAttribute('crossorigin', 'anonymous');
     this.element.src = target.result;
-    if (this.converter) this.converter.remove();
-    this.audio.bindPlay(() => {
-      this.initializeElement();
-    });
     this.element.addEventListener('canplay', () => {
-      this.audio.enable();
+      if (this.element.duration <= 30) {
+        if (this.converter) this.converter.remove();
+        this.audio.bindPlay(() => {
+          this.initializeElement();
+        });
+        this.audio.enable();
+      } else {
+        this.file.enable();
+        alert('Will not process audio over 30 seconds long.');
+      }
     });
   }
 
   initializeElement() {
+    this.stereo = document.querySelector('#stereo').checked;
     this._recordElement();
     this.element.addEventListener('ended', () => this.converter.stop());
   }
 
   _recordElement() {
-    let stereo = document.querySelector('#stereo').checked;
     this.converter = new AudioToImage({
+      $parent: this.$output,
       duration: this.element.duration,
       bits: 16,
-      stereo
+      stereo: this.stereo
     });
     this.input = audioContext.createMediaElementSource(this.element);
     let bufferSize = 8192,
-      channels = stereo ? 2 : 1;
+      channels = this.stereo ? 2 : 1;
     this.processor = audioContext.createScriptProcessor(
       bufferSize,
       channels,

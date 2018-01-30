@@ -9,31 +9,165 @@
   <title>Sonic Pixels</title>
 </head>
 <body>
+  <nav>
+    <ul>
+      <li>
+        <a href="#player" id="nav-player">Play Image</a>
+      </li>
+      <li>
+        <a href="#file" id="nav-file" class="active">Convert Audio</a>
+      </li>
+      <li>
+        <a href="#mic" id="nav-mic">Record Microphone</a>
+      </li>
+    </ul>
+  </nav>
   <main>
-    <section class="recorder">
-      <header>
-        <span class="checkbox">
-          <input id="stereo" type="checkbox" checked />
-          <label for="stereo" checked="Stereo" unchecked="Mono" >
-            <span></span>
-          </label>
-        </span>
-      </header>
-      <div class="audio disabled">
-        <a href="#" class="play">▶</a>
-        <span class="progress"><span></span></span>
-      </div>
-      <div class="file"></div>
-      <div class="output"></div>
+    <section id="player" class="player">
+      <article>
+        <div class="container">
+          <div class="audio disabled">
+            <a href="#" class="play">▶</a>
+            <span class="progress"><span></span></span>
+          </div>
+          <div class="file"></div>
+          <div class="input"></div>
+        </div>
+        <aside>
+          <div>
+            <h1>Play Image</h1>
+            <p>
+              This is the Image player. In order to use it, you'll need a Sonic Pixels image.
+              You can generate one either by <a href="#mic">recording your microphone</a>
+                or <a href="#file">converting an Audio&nbsp;file</a>.
+            </p>
+            <p>
+              Once you have your image, drop it in the file area.
+              It will load the image, then you can hit play (▶) and hear what the image sounds
+                like.
+              To play it again, you have to re-add the file.
+            </p>
+            <p>
+              Be warned, random images will not sound good and might get a little loud.
+            </p>
+          </div>
+          <div>
+            <h1>About</h1>
+            <p>I am <a href="https://twitter.com/jake_albaugh">Jake Albaugh</a>.</p>
+            <p>
+              Sonic Pixels stores a sample of 16 bit audio inside of a single pixel. It has the
+              capacity to store 24 bits, but for the time being, translates everything as 16.
+              That means your variable bit rate mp3 or 24bit WAV will not sound exactly the same.
+              However, your 16 bit WAV will.
+            </p>
+            <p>
+              I am having trouble getting the browser to behave with more than 30 seconds of
+                source audio.
+              I have successfully recorded a full 4-minute song, but can't manage to do it with
+                much consistency. That is why there are limits.
+            </p>
+          </div>
+        </aside>
+      </article>
     </section>
-    <section class="player">
-      <header></header>
-      <div class="audio disabled">
-        <a href="#" class="play">▶</a>
-        <span class="progress"><span></span></span>
-      </div>
-      <div class="file"></div>
-      <div class="input"></div>
+    <section id="mic" class="recorder-mic">
+      <article>
+        <div class="container">
+          <header>
+            <button id="record"><span>Record</span><span>Stop</span></a>
+          </header>
+          <div class="output"></div>
+        </div>
+        <aside>
+          <div>
+            <h1>Record Microphone</h1>
+            <p>
+              Here you can record an Audio message as an image!
+              Hit record, give the app access to your microphone then speak a message.
+              You can stop whenever you like, or it will stop for you after 30 seconds.
+            </p>
+            <p>
+              Once the audio is complete, right click the generated image and "Save Image as..."
+                to save it to your computer.
+              As long as the image remains in the exact same format you saved it in,
+                it should be playable in full quality at <a href="#player">sonicpx.com#player</a>.
+            </p>
+          </div>
+          <div>
+            <h1>About</h1>
+            <p>I am <a href="https://twitter.com/jake_albaugh">Jake Albaugh</a>.</p>
+            <p>
+              Sonic Pixels stores a sample of 16 bit audio inside of a single pixel. It has the
+              capacity to store 24 bits, but for the time being, translates everything as 16.
+              That means your variable bit rate mp3 or 24bit WAV will not sound exactly the same.
+              However, your 16 bit WAV will.
+            </p>
+            <p>
+              I am having trouble getting the browser to behave with more than 30 seconds of
+                source audio.
+              I have successfully recorded a full 4-minute song, but can't manage to do it with
+                much consistency. That is why there are limits.
+            </p>
+          </div>
+        </aside>
+      </article>
+    </section>
+    <section id="file" class="recorder-file active">
+      <article>
+        <div class="container">
+          <header>
+            <span class="checkbox">
+              <input id="stereo" type="checkbox" checked />
+              <label for="stereo" checked="Stereo" unchecked="Mono" >
+                <span></span>
+              </label>
+            </span>
+          </header>
+          <div class="audio disabled">
+            <a href="#" class="play">▶</a>
+            <span class="progress"><span></span></span>
+          </div>
+          <div class="file"></div>
+          <div class="output"></div>
+        </div>
+        <aside>
+          <div>
+            <h1>Convert Audio</h1>
+            <p>
+              Here you can convert an Audio file into an image!
+              Drop a wav or mp3 file in the area to the left.
+              Then hit the play (▶) icon.
+              This will play your Audio and generates images in 5-second chunks.
+            </p>
+            <p>
+              Once the audio is complete, right click the generated image and "Save Image as..."
+                to save it to your computer.
+              As long as the image remains in the exact same format you saved it in,
+                it should be playable in full quality at <a href="#player">sonicpx.com#player</a>.
+            </p>
+            <p>
+              You can record in mono to cut the file size in half by toggling the mono/stereo
+                switch at the top of the&nbsp;player.
+            </p>
+          </div>
+          <div>
+            <h1>About</h1>
+            <p>I am <a href="https://twitter.com/jake_albaugh">Jake Albaugh</a>.</p>
+            <p>
+              Sonic Pixels stores a sample of 16 bit audio inside of a single pixel. It has the
+              capacity to store 24 bits, but for the time being, translates everything as 16.
+              That means your variable bit rate mp3 or 24bit WAV will not sound exactly the same.
+              However, your 16 bit WAV will.
+            </p>
+            <p>
+              I am having trouble getting the browser to behave with more than 30 seconds of
+                source audio.
+              I have successfully recorded a full 4-minute song, but can't manage to do it with
+                much consistency. That is why there are limits.
+            </p>
+          </div>
+        </aside>
+      </article>
     </section>
   </main>
   <script src="app.js"></script>

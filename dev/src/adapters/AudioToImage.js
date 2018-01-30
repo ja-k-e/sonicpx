@@ -7,12 +7,16 @@ const SECONDS_PER_CANVAS = 5,
   VERSION = 1;
 
 export default class AudioToImage {
-  constructor({ duration, bits, stereo = true }) {
+  constructor({ $parent, duration, bits, stereo = true }) {
     this.bits = bits;
     this.adapter = bits === 16 ? new Bit16() : new Bit24();
-    this.$parent = document.querySelector('.recorder .output');
+    this.$parent = $parent;
     this.stereo = stereo;
     this.initialize(duration);
+    this.reset();
+  }
+
+  reset() {
     this.off = false;
     this.tick = 0;
     this.imageData = null;

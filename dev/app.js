@@ -157,6 +157,98 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _Bit2 = __webpack_require__(5);
+
+var _Bit3 = _interopRequireDefault(_Bit2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Bit16 = function (_Bit) {
+  _inherits(Bit16, _Bit);
+
+  function Bit16() {
+    _classCallCheck(this, Bit16);
+
+    return _possibleConstructorReturn(this, (Bit16.__proto__ || Object.getPrototypeOf(Bit16)).apply(this, arguments));
+  }
+
+  _createClass(Bit16, [{
+    key: 'bits',
+    get: function get() {
+      return 65536.0;
+    }
+  }]);
+
+  return Bit16;
+}(_Bit3.default);
+
+exports.default = Bit16;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Bit2 = __webpack_require__(5);
+
+var _Bit3 = _interopRequireDefault(_Bit2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Bit24 = function (_Bit) {
+  _inherits(Bit24, _Bit);
+
+  function Bit24() {
+    _classCallCheck(this, Bit24);
+
+    return _possibleConstructorReturn(this, (Bit24.__proto__ || Object.getPrototypeOf(Bit24)).apply(this, arguments));
+  }
+
+  _createClass(Bit24, [{
+    key: 'bits',
+    get: function get() {
+      return 16777216.0;
+    }
+  }]);
+
+  return Bit24;
+}(_Bit3.default);
+
+exports.default = Bit24;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AudioPlayer = function () {
@@ -216,53 +308,7 @@ var AudioPlayer = function () {
 exports.default = AudioPlayer;
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Bit2 = __webpack_require__(4);
-
-var _Bit3 = _interopRequireDefault(_Bit2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Bit16 = function (_Bit) {
-  _inherits(Bit16, _Bit);
-
-  function Bit16() {
-    _classCallCheck(this, Bit16);
-
-    return _possibleConstructorReturn(this, (Bit16.__proto__ || Object.getPrototypeOf(Bit16)).apply(this, arguments));
-  }
-
-  _createClass(Bit16, [{
-    key: 'bits',
-    get: function get() {
-      return 65536.0;
-    }
-  }]);
-
-  return Bit16;
-}(_Bit3.default);
-
-exports.default = Bit16;
-
-/***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -333,52 +379,6 @@ var Bit = function () {
 }();
 
 exports.default = Bit;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Bit2 = __webpack_require__(4);
-
-var _Bit3 = _interopRequireDefault(_Bit2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Bit24 = function (_Bit) {
-  _inherits(Bit24, _Bit);
-
-  function Bit24() {
-    _classCallCheck(this, Bit24);
-
-    return _possibleConstructorReturn(this, (Bit24.__proto__ || Object.getPrototypeOf(Bit24)).apply(this, arguments));
-  }
-
-  _createClass(Bit24, [{
-    key: 'bits',
-    get: function get() {
-      return 16777216.0;
-    }
-  }]);
-
-  return Bit24;
-}(_Bit3.default);
-
-exports.default = Bit24;
 
 /***/ }),
 /* 6 */
@@ -497,24 +497,80 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _Player = __webpack_require__(9);
 
 var _Player2 = _interopRequireDefault(_Player);
 
-var _Recorder = __webpack_require__(11);
+var _RecordFile = __webpack_require__(11);
 
-var _Recorder2 = _interopRequireDefault(_Recorder);
+var _RecordFile2 = _interopRequireDefault(_RecordFile);
+
+var _RecordStream = __webpack_require__(13);
+
+var _RecordStream2 = _interopRequireDefault(_RecordStream);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var App = function App() {
-  _classCallCheck(this, App);
+var App = function () {
+  function App() {
+    _classCallCheck(this, App);
 
-  this.recorder = new _Recorder2.default();
-  this.player = new _Player2.default();
-};
+    this.recordFile = new _RecordFile2.default();
+    this.recordStream = new _RecordStream2.default();
+    this.player = new _Player2.default();
+    this.initDOM();
+    this.processHash();
+  }
+
+  _createClass(App, [{
+    key: 'initDOM',
+    value: function initDOM() {
+      var _this = this;
+
+      this.$nav = document.querySelector('nav');
+      this.$navPlayer = this.$nav.querySelector('#nav-player');
+      this.$navFile = this.$nav.querySelector('#nav-file');
+      this.$navMic = this.$nav.querySelector('#nav-mic');
+      this.$player = document.body.querySelector('section#player');
+      this.$file = document.body.querySelector('section#file');
+      this.$mic = document.body.querySelector('section#mic');
+      this.$navPlayer.addEventListener('click', function (e) {
+        _this.handleNav(e, _this.$player);
+      });
+      this.$navFile.addEventListener('click', function (e) {
+        _this.handleNav(e, _this.$file);
+      });
+      this.$navMic.addEventListener('click', function (e) {
+        _this.handleNav(e, _this.$mic);
+      });
+      window.addEventListener('hashchange', function () {
+        _this.processHash();
+      });
+    }
+  }, {
+    key: 'processHash',
+    value: function processHash() {
+      var hash = window.location.hash;
+      if (hash === '#player') this.$navPlayer.click();else if (hash === '#file') this.$navFile.click();else if (hash === '#mic') this.$navMic.click();
+    }
+  }, {
+    key: 'handleNav',
+    value: function handleNav(e, $el) {
+      var $existingNav = this.$nav.querySelector('nav a.active'),
+          $existingSection = document.querySelector('section.active');
+      if ($existingNav) $existingNav.classList.remove('active');
+      if ($existingSection) $existingSection.classList.remove('active');
+      e.target.classList.add('active');
+      $el.classList.add('active');
+    }
+  }]);
+
+  return App;
+}();
 
 exports.default = App;
 
@@ -535,7 +591,7 @@ var _audioContext = __webpack_require__(0);
 
 var _audioContext2 = _interopRequireDefault(_audioContext);
 
-var _AudioPlayer = __webpack_require__(2);
+var _AudioPlayer = __webpack_require__(4);
 
 var _AudioPlayer2 = _interopRequireDefault(_AudioPlayer);
 
@@ -580,14 +636,14 @@ var Player = function () {
       this.audio.disable();
       if (this.converter) this.converter.remove();
       this.converter = new _ImageToAudio2.default();
-      var sized = new Image(),
-          data = target.result;
-      sized.onload = function () {
-        _this.converter.initialize(sized);
+      this.sized = new Image();
+      var data = target.result;
+      this.sized.onload = function () {
+        _this.converter.initialize(_this.sized);
         _this.audio.enable();
         _this.audio.bindPlay(_this.handlePlay.bind(_this));
       };
-      sized.setAttribute('src', data);
+      this.sized.setAttribute('src', data);
     }
   }, {
     key: 'handlePlay',
@@ -603,7 +659,7 @@ var Player = function () {
     key: 'handleEnd',
     value: function handleEnd() {
       this.file.enable();
-      this.audio.progress('end');
+      this.audio.progress('stop');
     }
   }]);
 
@@ -633,19 +689,17 @@ var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _Bit = __webpack_require__(3);
+var _Bit = __webpack_require__(2);
 
 var _Bit2 = _interopRequireDefault(_Bit);
 
-var _Bit3 = __webpack_require__(5);
+var _Bit3 = __webpack_require__(3);
 
 var _Bit4 = _interopRequireDefault(_Bit3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var SECONDS_PER_CANVAS = 5;
 
 var ImageToAudio = function () {
   function ImageToAudio() {
@@ -695,7 +749,7 @@ var ImageToAudio = function () {
         this.bits = data[15];
       } else {
         this.version = 65536;
-        this.stereo = true;
+        this.stereo = false;
         this.bits = 16;
       }
       this.adapter = this.bits === 16 ? new _Bit2.default() : new _Bit4.default();
@@ -796,17 +850,13 @@ var _audioContext = __webpack_require__(0);
 
 var _audioContext2 = _interopRequireDefault(_audioContext);
 
-var _AudioPlayer = __webpack_require__(2);
+var _AudioPlayer = __webpack_require__(4);
 
 var _AudioPlayer2 = _interopRequireDefault(_AudioPlayer);
 
 var _AudioToImage = __webpack_require__(12);
 
 var _AudioToImage2 = _interopRequireDefault(_AudioToImage);
-
-var _AudioToImageCompressed = __webpack_require__(13);
-
-var _AudioToImageCompressed2 = _interopRequireDefault(_AudioToImageCompressed);
 
 var _Canvas = __webpack_require__(1);
 
@@ -820,21 +870,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Recorder = function () {
-  function Recorder() {
-    _classCallCheck(this, Recorder);
+var RecordFile = function () {
+  function RecordFile() {
+    _classCallCheck(this, RecordFile);
 
+    this.$output = document.querySelector('.recorder-file .output');
     this.audio = new _AudioPlayer2.default({
-      $element: document.querySelector('.recorder .audio')
+      $element: document.querySelector('.recorder-file .audio')
     });
     this.file = new _File2.default({
       accept: 'audio/*',
-      $parent: document.querySelector('.recorder .file'),
+      $parent: document.querySelector('.recorder-file .file'),
       handleChange: this.handleFileChange.bind(this)
     });
   }
 
-  _createClass(Recorder, [{
+  _createClass(RecordFile, [{
     key: 'handleFileChange',
     value: function handleFileChange(target, file) {
       var _this = this;
@@ -845,12 +896,17 @@ var Recorder = function () {
       this.element = new Audio();
       this.element.setAttribute('crossorigin', 'anonymous');
       this.element.src = target.result;
-      if (this.converter) this.converter.remove();
-      this.audio.bindPlay(function () {
-        _this.initializeElement();
-      });
       this.element.addEventListener('canplay', function () {
-        _this.audio.enable();
+        if (_this.element.duration <= 30) {
+          if (_this.converter) _this.converter.remove();
+          _this.audio.bindPlay(function () {
+            _this.initializeElement();
+          });
+          _this.audio.enable();
+        } else {
+          _this.file.enable();
+          alert('Will not process audio over 30 seconds long.');
+        }
       });
     }
   }, {
@@ -858,6 +914,7 @@ var Recorder = function () {
     value: function initializeElement() {
       var _this2 = this;
 
+      this.stereo = document.querySelector('#stereo').checked;
       this._recordElement();
       this.element.addEventListener('ended', function () {
         return _this2.converter.stop();
@@ -868,15 +925,15 @@ var Recorder = function () {
     value: function _recordElement() {
       var _this3 = this;
 
-      var stereo = document.querySelector('#stereo').checked;
-      this.converter = new _AudioToImageCompressed2.default({
+      this.converter = new _AudioToImage2.default({
+        $parent: this.$output,
         duration: this.element.duration,
         bits: 16,
-        stereo: stereo
+        stereo: this.stereo
       });
       this.input = _audioContext2.default.createMediaElementSource(this.element);
       var bufferSize = 8192,
-          channels = stereo ? 2 : 1;
+          channels = this.stereo ? 2 : 1;
       this.processor = _audioContext2.default.createScriptProcessor(bufferSize, channels, channels);
       // specify the processing function
       this.processor.onaudioprocess = function (data) {
@@ -904,10 +961,10 @@ var Recorder = function () {
     }
   }]);
 
-  return Recorder;
+  return RecordFile;
 }();
 
-exports.default = Recorder;
+exports.default = RecordFile;
 
 /***/ }),
 /* 12 */
@@ -930,11 +987,11 @@ var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
-var _Bit = __webpack_require__(3);
+var _Bit = __webpack_require__(2);
 
 var _Bit2 = _interopRequireDefault(_Bit);
 
-var _Bit3 = __webpack_require__(5);
+var _Bit3 = __webpack_require__(3);
 
 var _Bit4 = _interopRequireDefault(_Bit3);
 
@@ -947,7 +1004,8 @@ var SECONDS_PER_CANVAS = 5,
 
 var AudioToImage = function () {
   function AudioToImage(_ref) {
-    var duration = _ref.duration,
+    var $parent = _ref.$parent,
+        duration = _ref.duration,
         bits = _ref.bits,
         _ref$stereo = _ref.stereo,
         stereo = _ref$stereo === undefined ? true : _ref$stereo;
@@ -956,15 +1014,20 @@ var AudioToImage = function () {
 
     this.bits = bits;
     this.adapter = bits === 16 ? new _Bit2.default() : new _Bit4.default();
-    this.$parent = document.querySelector('.recorder .output');
+    this.$parent = $parent;
     this.stereo = stereo;
     this.initialize(duration);
-    this.off = false;
-    this.tick = 0;
-    this.imageData = null;
+    this.reset();
   }
 
   _createClass(AudioToImage, [{
+    key: 'reset',
+    value: function reset() {
+      this.off = false;
+      this.tick = 0;
+      this.imageData = null;
+    }
+  }, {
     key: 'initialize',
     value: function initialize(duration) {
       this.canvasesIdx = 0;
@@ -1131,201 +1194,97 @@ var _audioContext = __webpack_require__(0);
 
 var _audioContext2 = _interopRequireDefault(_audioContext);
 
+var _StreamToImage = __webpack_require__(14);
+
+var _StreamToImage2 = _interopRequireDefault(_StreamToImage);
+
 var _Canvas = __webpack_require__(1);
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
-
-var _Bit16Compressed = __webpack_require__(14);
-
-var _Bit16Compressed2 = _interopRequireDefault(_Bit16Compressed);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var SECONDS_PER_CANVAS = 5,
-    VERSION = 1;
+var RecordStream = function () {
+  function RecordStream() {
+    var _this = this;
 
-var AudioToImageCompressed = function () {
-  function AudioToImageCompressed(_ref) {
-    var duration = _ref.duration,
-        bits = _ref.bits,
-        _ref$stereo = _ref.stereo,
-        stereo = _ref$stereo === undefined ? true : _ref$stereo;
+    _classCallCheck(this, RecordStream);
 
-    _classCallCheck(this, AudioToImageCompressed);
-
-    this.bits = bits;
-    // TODO: no 24
-    this.adapter = bits === 16 ? new _Bit16Compressed2.default() : new _Bit16Compressed2.default();
-    this.$parent = document.querySelector('.recorder .output');
-    this.stereo = stereo;
-    this.initialize(duration);
-    this.off = false;
-    this.tick = 0;
-    this.imageData = null;
+    this.$output = document.querySelector('.recorder-mic .output');
+    this.recording = false;
+    this.started = false;
+    this.$toggle = document.querySelector('#record');
+    this.$toggle.addEventListener('click', function () {
+      if (_this.recording) _this.stop();else _this.reset();
+      _this.recording = !_this.recording;
+      var mtd = _this.recording ? 'add' : 'remove';
+      _this.$toggle.classList[mtd]('active');
+      if (_this.recording && !_this.started) {
+        _this.started = true;
+        _this.initializeStream().catch(alert);
+      }
+    });
   }
 
-  _createClass(AudioToImageCompressed, [{
-    key: 'initialize',
-    value: function initialize(duration) {
-      this.canvasesIdx = 0;
-      this.canvases = [];
-      // We are compressing to ~66.67%, three samples per two pixels
-      var relDuration = Math.ceil(duration * 0.66666667),
-          pixelCount = Math.ceil(relDuration * _audioContext2.default.sampleRate),
-          di = Math.floor(Math.sqrt(pixelCount)),
-          w = this.stereo ? di * 2 : di,
-          wh = this.stereo ? w * 0.5 : w,
-          h = Math.ceil(pixelCount / wh),
-          canvasCount = Math.ceil(relDuration / SECONDS_PER_CANVAS),
-          cvsH = Math.ceil(h / canvasCount),
-          cvsLastH = canvasCount === 1 ? h : h - cvsH * (canvasCount - 1);
-      for (var i = 0; i < canvasCount; i++) {
-        var canvas = new _Canvas2.default(this.$parent),
-            ch = i === canvasCount - 1 ? cvsLastH : cvsH;
-        canvas.setSize(w, ch);
-        this.canvases.push(canvas);
-      }
-    }
-  }, {
-    key: 'remove',
-    value: function remove() {
-      this.$parent.innerHTML = '';
-    }
-  }, {
-    key: 'handleEnd',
-    value: function handleEnd() {
-      this.canvas.putImage(this.imageData, 0, 0);
-      var canvas = new _Canvas2.default(),
-          totalW = this.canvases[0].w,
-          firstH = this.canvases[0].h,
-          totalH = this.canvases.map(function (a) {
-        return a.h;
-      }).reduce(function (a, b) {
-        return a + b;
-      });
-      canvas.setSize(totalW, totalH + 1);
-      // Storing metadata in alpha channel of first four pixels
-      var meta = new _Canvas2.default().createImage(4, 1);
-      meta.data[3] = Math.floor(VERSION / 256);
-      meta.data[7] = VERSION % 256;
-      meta.data[11] = this.stereo ? 1 : 0;
-      meta.data[15] = this.bits;
-      canvas.putImage(meta, 0, 0);
-      for (var i = 0; i < this.canvases.length; i++) {
-        var cvs = this.canvases[i],
-            y = i * firstH,
-            d = cvs.imageData(0, 0);
-        canvas.putImage(d, 0, y + 1);
-      }
-      this.$parent.innerHTML = '';
-      this.$parent.appendChild(canvas.cvs);
+  _createClass(RecordStream, [{
+    key: 'reset',
+    value: function reset() {
+      if (this.converter) this.converter.reset();
     }
   }, {
     key: 'stop',
     value: function stop() {
-      this.off = true;
+      this.converter.stop();
+      this.converter.handleEnd();
     }
   }, {
-    key: 'process',
-    value: function process(data) {
-      if (this.off) return;
-      if (!this.imageData) this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
+    key: 'initializeStream',
+    value: function initializeStream() {
+      var _this2 = this;
 
-      if (this.stereo) {
-        var left = data.inputBuffer.getChannelData(0),
-            right = data.inputBuffer.getChannelData(1),
-            len = right.length;
-        for (var i = 0; i < len; i += 3) {
-          if (this.off) return;
+      return new Promise(function (resolve, reject) {
+        if (navigator.mediaDevices) navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+          resolve();
+          _this2._recordStream(stream);
+        }).catch(reject);else reject('getUserMedia not supported!');
+      });
+    }
+  }, {
+    key: '_recordStream',
+    value: function _recordStream(stream) {
+      var _this3 = this;
 
-          var _tickPosition = this.tickPosition(),
-              x = _tickPosition.x,
-              y = _tickPosition.y;
-          // The image data starting index
-
-
-          var idxL = y * this.canvas.w * 4 + x * 4,
-              idxR = idxL + this.canvas.wh * 4,
-              lefts = [left[i], left[i + 1], left[i + 2]],
-              rights = [right[i], right[i + 1], right[i + 2]],
-              _adapter$rgbsStereo = this.adapter.rgbsStereo(lefts, rights),
-              rgbsL = _adapter$rgbsStereo.rgbsL,
-              rgbsR = _adapter$rgbsStereo.rgbsR;
-          // Setting Left channel
-          this.setDataAtIndex(idxL, rgbsL);
-          // Setting Right channel
-          this.setDataAtIndex(idxR, rgbsR);
-
-          this.tick += 3;
+      this.converter = new _StreamToImage2.default({
+        $parent: this.$output,
+        handleComplete: function handleComplete() {
+          _this3.$toggle.click();
         }
-      } else {
-        var channel = data.inputBuffer.getChannelData(0),
-            _len = channel.length;
-        for (var _i = 0; _i < _len; _i++) {
-          if (this.off) return;
-
-          var _tickPosition2 = this.tickPosition(),
-              x = _tickPosition2.x,
-              y = _tickPosition2.y;
-
-          var idx = y * this.canvas.w * 4 + x * 4,
-              _adapter$rgbMono = this.adapter.rgbMono(channel[_i]),
-              rgb = _adapter$rgbMono.rgb;
-          // Setting the only channel
-          this.setDataAtIndex(idx, rgb);
-
-          this.tick++;
-        }
-      }
-    }
-  }, {
-    key: 'setDataAtIndex',
-    value: function setDataAtIndex(idx, rgbs) {
-      if (!rgbs) return;
-      var px1 = rgbs[0],
-          px2 = rgbs[1];
-      this.imageData.data[idx + 0] = px1[0];
-      this.imageData.data[idx + 1] = px1[1];
-      this.imageData.data[idx + 2] = px1[2];
-      this.imageData.data[idx + 3] = 255;
-      this.imageData.data[idx + 4] = px2[0];
-      this.imageData.data[idx + 5] = px2[1];
-      this.imageData.data[idx + 6] = px2[2];
-      this.imageData.data[idx + 7] = 255;
-    }
-  }, {
-    key: 'tickPosition',
-    value: function tickPosition() {
-      var xFactor = this.stereo ? this.canvas.wh : this.canvas.w,
-          x = this.tick % xFactor,
-          y = Math.floor(this.tick / xFactor);
-      if (y !== this.lastY && y > this.canvas.h) {
-        this.canvas.putImage(this.imageData, 0, 0);
-        this.nextCanvas();
-        this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
-        this.tick = 0;
-      }
-      this.lastY = y;
-      return { x: x, y: y };
-    }
-  }, {
-    key: 'nextCanvas',
-    value: function nextCanvas() {
-      this.canvasesIdx++;
-    }
-  }, {
-    key: 'canvas',
-    get: function get() {
-      return this.canvases[this.canvasesIdx];
+      });
+      this.input = _audioContext2.default.createMediaStreamSource(stream);
+      var bufferSize = 8192;
+      this.processor = _audioContext2.default.createScriptProcessor(bufferSize, 1, 1);
+      // specify the processing function
+      this.processor.onaudioprocess = function (data) {
+        _this3.converter.process(data);
+      };
+      // connect stream to our processor
+      this.input.connect(this.processor);
+      this.input.onended = function () {
+        _this3.input.disconnect(_this3.processor);
+        _this3.processor.disconnect(_audioContext2.default.destination);
+        _this3.processor.onaudioprocess = null;
+      };
+      // connect our processor to the previous destination
+      this.processor.connect(_audioContext2.default.destination);
     }
   }]);
 
-  return AudioToImageCompressed;
+  return RecordStream;
 }();
 
-exports.default = AudioToImageCompressed;
+exports.default = RecordStream;
 
 /***/ }),
 /* 14 */
@@ -1340,68 +1299,127 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _audioContext = __webpack_require__(0);
+
+var _audioContext2 = _interopRequireDefault(_audioContext);
+
+var _Canvas = __webpack_require__(1);
+
+var _Canvas2 = _interopRequireDefault(_Canvas);
+
+var _Bit = __webpack_require__(2);
+
+var _Bit2 = _interopRequireDefault(_Bit);
+
+var _Bit3 = __webpack_require__(3);
+
+var _Bit4 = _interopRequireDefault(_Bit3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Bit16Compressed = function () {
-  function Bit16Compressed() {
-    _classCallCheck(this, Bit16Compressed);
+var CANVAS_WIDTH = 1200,
+    MAX_SECONDS = 30,
+    VERSION = 1;
+
+var StreamToImage = function () {
+  function StreamToImage(_ref) {
+    var $parent = _ref.$parent,
+        handleComplete = _ref.handleComplete;
+
+    _classCallCheck(this, StreamToImage);
+
+    this.handleComplete = handleComplete;
+    this.adapter = new _Bit2.default();
+    this.$parent = $parent;
+    this.reset();
   }
 
-  _createClass(Bit16Compressed, [{
-    key: "rgbsStereo",
-    value: function rgbsStereo(valuesL, valuesR) {
-      var rgbsL = this.rgbsMono(valuesL).rgb,
-          rgbsR = this.rgbsMono(valuesR).rgb;
-      return { rgbsL: rgbsL, rgbsR: rgbsR };
+  _createClass(StreamToImage, [{
+    key: 'reset',
+    value: function reset() {
+      this.off = false;
+      this.tick = 0;
+      this.$parent.innerHTML = '';
+      this.canvas = new _Canvas2.default(this.$parent);
+      var h = Math.ceil(MAX_SECONDS * _audioContext2.default.sampleRate / CANVAS_WIDTH);
+      this.canvas.setSize(CANVAS_WIDTH, h);
+      this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
     }
   }, {
-    key: "rgbsMono",
-    value: function rgbsMono(values) {
-      var _this = this;
+    key: 'handleEnd',
+    value: function handleEnd() {
+      var canvas = new _Canvas2.default();
+      canvas.setSize(this.canvas.w, this.lastY + 1);
+      // Storing metadata in alpha channel of cvs four pixels
+      var meta = new _Canvas2.default().createImage(4, 1);
+      meta.data[3] = Math.floor(VERSION / 256);
+      meta.data[7] = VERSION % 256;
+      meta.data[11] = 0; // mono only
+      meta.data[15] = 16;
+      canvas.putImage(meta, 0, 0);
+      var d = this.canvas.imageData(0, 0, this.canvas.w, this.lastY);
+      canvas.putImage(d, 0, 1);
+      this.$parent.innerHTML = '';
+      this.$parent.appendChild(canvas.cvs);
+    }
+  }, {
+    key: 'stop',
+    value: function stop() {
+      this.off = true;
+    }
+  }, {
+    key: 'process',
+    value: function process(data) {
+      if (this.off) return;
 
-      var rgbs = [[], []];
-      values.forEach(function (value, i) {
-        var bytes = _this._valToBytes(value);
-        rgbs[0][i] = Math.floor(bytes / 256.0);
-        rgbs[1][i] = bytes % 256.0;
-      });
-      return { rgbs: rgbs };
+      var channel = data.inputBuffer.getChannelData(0),
+          len = channel.length;
+      for (var i = 0; i < len; i++) {
+        if (this.off) return;
+
+        var _tickPosition = this.tickPosition(),
+            x = _tickPosition.x,
+            y = _tickPosition.y;
+
+        var idx = y * this.canvas.w * 4 + x * 4,
+            _adapter$rgbMono = this.adapter.rgbMono(channel[i]),
+            rgb = _adapter$rgbMono.rgb;
+        // Setting the only channel
+        this.setDataAtIndex(idx, rgb);
+
+        this.tick++;
+      }
     }
   }, {
-    key: "valueStereo",
-    value: function valueStereo(rgbL, rgbR) {
-      var valueL = this.valueMono(rgbL).value,
-          valueR = this.valueMono(rgbR).value;
-      return { valueL: valueL, valueR: valueR };
+    key: 'setDataAtIndex',
+    value: function setDataAtIndex(idx, rgb) {
+      this.imageData.data[idx + 0] = rgb[0];
+      this.imageData.data[idx + 1] = rgb[1];
+      this.imageData.data[idx + 2] = rgb[2];
+      this.imageData.data[idx + 3] = 255;
     }
   }, {
-    key: "valueMono",
-    value: function valueMono(rgb) {
-      var bytes = rgb[0] * 256.0 * 256.0 + rgb[1] * 256.0 + rgb[2],
-          value = this._bytesToVal(bytes);
-      return { value: value };
-    }
-  }, {
-    key: "_valToBytes",
-    value: function _valToBytes(value) {
-      return value * this.bitsH + this.bitsH;
-    }
-  }, {
-    key: "_bytesToVal",
-    value: function _bytesToVal(bytes) {
-      return bytes / this.bits * 2.0 - 1.0;
-    }
-  }, {
-    key: "bitsH",
-    get: function get() {
-      return this.bits * 0.5;
+    key: 'tickPosition',
+    value: function tickPosition() {
+      var xFactor = this.canvas.w,
+          x = this.tick % xFactor,
+          y = Math.floor(this.tick / xFactor);
+      if (y % 4 === 0 && y !== this.lastY) {
+        this.canvas.clear();
+        this.canvas.putImage(this.imageData, 0, 0);
+      }
+      if (y > this.canvas.h) this.handleComplete();
+      this.lastY = y;
+      return { x: x, y: y };
     }
   }]);
 
-  return Bit16Compressed;
+  return StreamToImage;
 }();
 
-exports.default = Bit16Compressed;
+exports.default = StreamToImage;
 
 /***/ })
 /******/ ]);

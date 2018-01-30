@@ -23,14 +23,14 @@ export default class Player {
     this.audio.disable();
     if (this.converter) this.converter.remove();
     this.converter = new ImageToAudio();
-    let sized = new Image(),
-      data = target.result;
-    sized.onload = () => {
-      this.converter.initialize(sized);
+    this.sized = new Image();
+    let data = target.result;
+    this.sized.onload = () => {
+      this.converter.initialize(this.sized);
       this.audio.enable();
       this.audio.bindPlay(this.handlePlay.bind(this));
     };
-    sized.setAttribute('src', data);
+    this.sized.setAttribute('src', data);
   }
 
   handlePlay() {
@@ -40,6 +40,6 @@ export default class Player {
 
   handleEnd() {
     this.file.enable();
-    this.audio.progress('end');
+    this.audio.progress('stop');
   }
 }

@@ -3,8 +3,6 @@ import Canvas from '../components/Canvas';
 import Bit16 from './Bit16';
 import Bit24 from './Bit24';
 
-const SECONDS_PER_CANVAS = 5;
-
 export default class ImageToAudio {
   constructor() {
     this.$parent = document.querySelector('.player .input');
@@ -42,7 +40,7 @@ export default class ImageToAudio {
       this.bits = data[15];
     } else {
       this.version = 65536;
-      this.stereo = true;
+      this.stereo = false;
       this.bits = 16;
     }
     this.adapter = this.bits === 16 ? new Bit16() : new Bit24();
