@@ -452,6 +452,7 @@ var File = function () {
           reader.onload = function (_ref2) {
             var target = _ref2.target;
 
+            _this.handleChange(target, file);
             _this.$file.value = '';
           };
           if (file && file.type.match(accept)) reader.readAsDataURL(file);else _this.$file.value = '';

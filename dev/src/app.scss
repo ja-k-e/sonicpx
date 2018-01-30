@@ -57,8 +57,10 @@ body {
           padding: 0.125rem 1rem;
         }
         @media (min-width: 600px) {
-          a {
+          li {
             width: auto;
+          }
+          a {
             padding: 0.5rem 1rem;
             height: $nav-h;
             line-height: $nav-h;
