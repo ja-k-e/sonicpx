@@ -13,6 +13,24 @@ body {
   min-height: 700px;
   background: #000;
 }
+@media (min-width: 600px) {
+  .mobile {
+    display: none;
+  }
+}
+@media (max-width: 559px) {
+  .mobile ~ * {
+    display: none !important;
+  }
+  .mobile {
+    text-align: center;
+    color: tomato;
+  }
+  canvas {
+    max-width: 100% !important;
+  }
+}
+
 body {
   font-family: $font;
   margin: 0;
@@ -30,15 +48,28 @@ body {
       justify-content: center;
       li {
         border-right: 2px solid #f0f0f0;
+        height: $nav-h;
+        line-height: $nav-h;
+        overflow: hidden;
+        width: 33.33%;
+        text-align: center;
+        a {
+          padding: 0.125rem 1rem;
+        }
+        @media (min-width: 600px) {
+          a {
+            width: auto;
+            padding: 0.5rem 1rem;
+            height: $nav-h;
+            line-height: $nav-h;
+          }
+        }
         &:first-child {
           border-left: 2px solid #f0f0f0;
         }
         a {
-          height: $nav-h;
-          line-height: $nav-h;
           text-decoration: none;
-          display: inline-block;
-          padding: 0.5rem 1rem;
+          display: block;
           text-transform: uppercase;
           font-size: 12px;
           letter-spacing: 0.125em;
@@ -77,15 +108,10 @@ body {
       }
       article {
         flex: 1;
-        display: flex;
-        flex-wrap: wrap;
-        @media (max-width: 600px) {
-          flex-direction: column;
-          aside {
-            width: 100%;
-          }
-        }
+        width: 100%;
         @media (min-width: 601px) {
+          display: flex;
+          flex-wrap: wrap;
           aside {
             min-width: 200px;
             width: 33.33%;
@@ -114,6 +140,9 @@ body {
           }
           p + p {
             margin-top: 0.5rem;
+          }
+          > div + div {
+            margin-top: 1rem;
           }
           h1 {
             font-weight: 300;

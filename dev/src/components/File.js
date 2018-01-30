@@ -40,7 +40,6 @@ export default class File {
           accept = this.accept.replace(/\*/, ''),
           file = this.$file.files[0];
         reader.onload = ({ target }) => {
-          this.handleChange(target, file);
           this.$file.value = '';
         };
         if (file && file.type.match(accept)) reader.readAsDataURL(file);

@@ -73,6 +73,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext = new AudioContext();
 exports.default = audioContext;
 
@@ -451,7 +452,6 @@ var File = function () {
           reader.onload = function (_ref2) {
             var target = _ref2.target;
 
-            _this.handleChange(target, file);
             _this.$file.value = '';
           };
           if (file && file.type.match(accept)) reader.readAsDataURL(file);else _this.$file.value = '';
@@ -1223,7 +1223,10 @@ var RecordStream = function () {
       _this.$toggle.classList[mtd]('active');
       if (_this.recording && !_this.started) {
         _this.started = true;
-        _this.initializeStream().catch(alert);
+        _this.initializeStream().catch(function () {
+          alert('Your device is not supported.');
+          _this.$toggle.classList.remove('active');
+        });
       }
     });
   }

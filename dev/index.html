@@ -45,7 +45,7 @@
     </ul>
   </nav>
   <main>
-    <section id="player" class="player">
+    <section id="player" class="player active">
       <article>
         <div class="container">
           <div class="audio disabled">
@@ -95,6 +95,9 @@
     <section id="mic" class="recorder-mic">
       <article>
         <div class="container">
+          <div class="mobile">
+            <p>Recording is not supported on this device.</p>
+          </div>
           <header>
             <button id="record"><span>Record</span><span>Stop</span></a>
           </header>
@@ -134,9 +137,12 @@
         </aside>
       </article>
     </section>
-    <section id="file" class="recorder-file active">
+    <section id="file" class="recorder-file">
       <article>
         <div class="container">
+          <div class="mobile">
+            <p>Recording is not supported on this device.</p>
+          </div>
           <header>
             <span class="checkbox">
               <input id="stereo" type="checkbox" checked />

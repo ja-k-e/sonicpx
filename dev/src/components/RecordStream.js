@@ -16,7 +16,10 @@ export default class RecordStream {
       this.$toggle.classList[mtd]('active');
       if (this.recording && !this.started) {
         this.started = true;
-        this.initializeStream().catch(alert);
+        this.initializeStream().catch(() => {
+          alert('Your device is not supported.');
+          this.$toggle.classList.remove('active');
+        });
       }
     });
   }
