@@ -48,6 +48,9 @@ body {
       justify-content: center;
       li {
         border-right: 2px solid #f0f0f0;
+        &:first-child {
+          border-left: 2px solid #f0f0f0;
+        }
         height: $nav-h;
         line-height: $nav-h;
         overflow: hidden;
@@ -56,6 +59,14 @@ body {
         a {
           padding: 0.125rem 1rem;
         }
+        @media (max-width: 599px) {
+          &:first-child {
+            border-left: none;
+          }
+          &:last-child {
+            border-right: none;
+          }
+        }
         @media (min-width: 600px) {
           width: auto;
           a {
@@ -63,9 +74,6 @@ body {
             height: $nav-h;
             line-height: calc(#{$nav-h} - 1rem);
           }
-        }
-        &:first-child {
-          border-left: 2px solid #f0f0f0;
         }
         a {
           box-sizing: border-box;
