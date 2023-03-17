@@ -24,7 +24,7 @@ export default class RecordFile {
     this.element.setAttribute("crossorigin", "anonymous");
     this.element.src = target.result;
     this.element.addEventListener("canplay", () => {
-      if (this.element.duration <= 30) {
+      if (this.element.duration <= 60) {
         if (this.converter) this.converter.remove();
         this.audio.bindPlay(() => {
           this.initializeElement();
@@ -32,7 +32,7 @@ export default class RecordFile {
         this.audio.enable();
       } else {
         this.file.enable();
-        alert("Will not process audio over 30 seconds long.");
+        alert("Will not process audio over 60 seconds long.");
       }
     });
   }

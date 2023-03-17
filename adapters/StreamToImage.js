@@ -3,7 +3,7 @@ import Canvas from "../components/Canvas.js";
 import Bit16 from "./Bit16.js";
 
 const CANVAS_WIDTH = 1200,
-  MAX_SECONDS = 30,
+  MAX_SECONDS = 60,
   VERSION = 1;
 
 export default class StreamToImage {
