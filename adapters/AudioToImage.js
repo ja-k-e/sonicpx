@@ -66,7 +66,10 @@ export default class AudioToImage {
       canvas.putImage(d, 0, y + 1);
     }
     this.$parent.innerHTML = "";
-    this.$parent.appendChild(canvas.cvs);
+    // this.$parent.appendChild(canvas.cvs);
+    const img = new Image();
+    img.src = canvas.cvs.toDataURL();
+    this.$parent.appendChild(img);
   }
 
   stop() {

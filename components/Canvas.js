@@ -1,8 +1,8 @@
 export default class Canvas {
   constructor($parent) {
-    this.cvs = document.createElement('canvas');
+    this.cvs = document.createElement("canvas");
     if ($parent) $parent.appendChild(this.cvs);
-    this.ctx = this.cvs.getContext('2d');
+    this.ctx = this.cvs.getContext("2d");
   }
 
   clear() {
@@ -16,6 +16,7 @@ export default class Canvas {
     this.hh = h * 0.5;
     this.cvs.width = w;
     this.cvs.height = h;
+    this.ctx = this.cvs.getContext("2d");
   }
 
   createImage(w, h) {

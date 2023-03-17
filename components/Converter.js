@@ -41,11 +41,11 @@ export default class Converter {
 
   _normalizedValue16(r, g, b) {
     let value = g * 256.0 + b;
-    return value / BIT16 * 2.0 - 1.0;
+    return (value / BIT16) * 2.0 - 1.0;
   }
 
   _normalizedValue24(r, g, b) {
     let value = r * 256.0 * 256.0 + g * 256.0 + b;
-    return value / BIT24 * 2.0 - 1.0;
+    return (value / BIT24) * 2.0 - 1.0;
   }
 }

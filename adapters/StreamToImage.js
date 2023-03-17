@@ -19,10 +19,12 @@ export default class StreamToImage {
     this.tick = 0;
     this.$parent.innerHTML = "";
     this.canvas = new Canvas(this.$parent);
-    let h = Math.ceil(
+    this.MAX_HEIGHT = Math.ceil(
       (MAX_SECONDS * getAudioContext().sampleRate) / CANVAS_WIDTH
     );
-    this.canvas.setSize(CANVAS_WIDTH, h);
+    this.canvas.setSize(CANVAS_WIDTH, this.MAX_HEIGHT);
+    this.$parent.style.height = `0px`;
+    this.$parent.style.overflowY = "hidden";
     this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
   }
 
@@ -39,7 +41,10 @@ export default class StreamToImage {
     let d = this.canvas.imageData(0, 0, this.canvas.w, this.lastY);
     canvas.putImage(d, 0, 1);
     this.$parent.innerHTML = "";
-    this.$parent.appendChild(canvas.cvs);
+    // this.$parent.appendChild(canvas.cvs);
+    const img = new Image();
+    img.src = canvas.cvs.toDataURL();
+    this.$parent.appendChild(img);
   }
 
   stop() {
@@ -77,8 +82,10 @@ export default class StreamToImage {
     if (y % 4 === 0 && y !== this.lastY) {
       this.canvas.clear();
       this.canvas.putImage(this.imageData, 0, 0);
+      const height = this.canvas.cvs.clientHeight * (y / this.MAX_HEIGHT);
+      this.$parent.style.height = `${height}px`;
     }
-    if (y > this.canvas.h) this.handleComplete();
+    if (y > this.MAX_HEIGHT) this.handleEnd();
     this.lastY = y;
     return { x, y };
   }
