@@ -1,6 +1,6 @@
-import Player from './Player';
-import RecordFile from './RecordFile';
-import RecordStream from './RecordStream';
+import Player from './Player.js';
+import RecordFile from './RecordFile.js';
+import RecordStream from './RecordStream.js';
 
 export default class App {
   constructor() {

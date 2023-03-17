@@ -1,17 +1,17 @@
-import audioContext from '../globals/audioContext';
-import Canvas from '../components/Canvas';
-import Bit16 from './Bit16';
-import Bit24 from './Bit24';
+import getAudioContext from "../globals/audioContext.js";
+import Canvas from "../components/Canvas.js";
+import Bit16 from "./Bit16.js";
+import Bit24 from "./Bit24.js";
 
 export default class ImageToAudio {
   constructor() {
-    this.$parent = document.querySelector('.player .input');
+    this.$parent = document.querySelector(".player .input");
   }
 
   remove() {
-    this.$parent.innerHTML = '';
+    this.$parent.innerHTML = "";
     this.source.stop();
-    this.source.disconnect(audioContext.destination);
+    this.source.disconnect(getAudioContext().destination);
     this._playing = false;
     delete this.source;
   }
@@ -49,7 +49,7 @@ export default class ImageToAudio {
   _hasMeta(data) {
     let hasMeta = true;
     // All these numbers should be black
-    [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14].forEach(v => {
+    [0, 1, 2, 4, 5, 6, 8, 9, 10, 12, 13, 14].forEach((v) => {
       if (data[v] !== 0) hasMeta = false;
     });
     if (data[11] > 2) hasMeta = false;
@@ -62,10 +62,10 @@ export default class ImageToAudio {
     let { w, wh, h } = this.canvas;
 
     if (this.stereo) {
-      this.buffer = audioContext.createBuffer(
+      this.buffer = getAudioContext().createBuffer(
         2,
         wh * h,
-        audioContext.sampleRate
+        getAudioContext().sampleRate
       );
 
       let bitsL = this.canvas.imageData(0, 1, wh, h - 1).data,
@@ -92,10 +92,10 @@ export default class ImageToAudio {
         if (dRa === 255) channelR[channelIdx] = valueR;
       }
     } else {
-      this.buffer = audioContext.createBuffer(
+      this.buffer = getAudioContext().createBuffer(
         1,
         w * h,
-        audioContext.sampleRate
+        getAudioContext().sampleRate
       );
 
       let bits = this.canvas.imageData(0, 1, w, h - 1).data,
@@ -113,8 +113,8 @@ export default class ImageToAudio {
       }
     }
 
-    this.source = audioContext.createBufferSource();
+    this.source = getAudioContext().createBufferSource();
     this.source.buffer = this.buffer;
-    this.source.connect(audioContext.destination);
+    this.source.connect(getAudioContext().destination);
   }
 }

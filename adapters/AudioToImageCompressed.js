@@ -1,6 +1,6 @@
-import audioContext from '../globals/audioContext';
-import Canvas from '../components/Canvas';
-import Bit16Compressed from './Bit16Compressed';
+import getAudioContext from "../globals/audioContext.js";
+import Canvas from "../components/Canvas.js";
+import Bit16Compressed from "./Bit16Compressed.js";
 
 const SECONDS_PER_CANVAS = 5,
   VERSION = 1;
@@ -10,7 +10,7 @@ export default class AudioToImageCompressed {
     this.bits = bits;
     // TODO: no 24
     this.adapter = bits === 16 ? new Bit16Compressed() : new Bit16Compressed();
-    this.$parent = document.querySelector('.recorder .output');
+    this.$parent = document.querySelector(".recorder .output");
     this.stereo = stereo;
     this.initialize(duration);
     this.off = false;
@@ -23,7 +23,7 @@ export default class AudioToImageCompressed {
     this.canvases = [];
     // We are compressing to ~66.67%, three samples per two pixels
     let relDuration = Math.ceil(duration * 0.66666667),
-      pixelCount = Math.ceil(relDuration * audioContext.sampleRate),
+      pixelCount = Math.ceil(relDuration * getAudioContext().sampleRate),
       di = Math.floor(Math.sqrt(pixelCount)),
       w = this.stereo ? di * 2 : di,
       wh = this.stereo ? w * 0.5 : w,
@@ -40,7 +40,7 @@ export default class AudioToImageCompressed {
   }
 
   remove() {
-    this.$parent.innerHTML = '';
+    this.$parent.innerHTML = "";
   }
 
   handleEnd() {
@@ -48,7 +48,7 @@ export default class AudioToImageCompressed {
     let canvas = new Canvas(),
       totalW = this.canvases[0].w,
       firstH = this.canvases[0].h,
-      totalH = this.canvases.map(a => a.h).reduce((a, b) => a + b);
+      totalH = this.canvases.map((a) => a.h).reduce((a, b) => a + b);
     canvas.setSize(totalW, totalH + 1);
     // Storing metadata in alpha channel of first four pixels
     let meta = new Canvas().createImage(4, 1);
@@ -63,7 +63,7 @@ export default class AudioToImageCompressed {
         d = cvs.imageData(0, 0);
       canvas.putImage(d, 0, y + 1);
     }
-    this.$parent.innerHTML = '';
+    this.$parent.innerHTML = "";
     this.$parent.appendChild(canvas.cvs);
   }
 

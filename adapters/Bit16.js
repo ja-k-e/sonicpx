@@ -1,4 +1,4 @@
-import Bit from './Bit';
+import Bit from "./Bit.js";
 
 export default class Bit16 extends Bit {
   get bits() {

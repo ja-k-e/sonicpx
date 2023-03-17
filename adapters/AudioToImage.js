@@ -1,7 +1,7 @@
-import audioContext from '../globals/audioContext';
-import Canvas from '../components/Canvas';
-import Bit16 from './Bit16';
-import Bit24 from './Bit24';
+import getAudioContext from "../globals/audioContext.js";
+import Canvas from "../components/Canvas.js";
+import Bit16 from "./Bit16.js";
+import Bit24 from "./Bit24.js";
 
 const SECONDS_PER_CANVAS = 5,
   VERSION = 1;
@@ -25,7 +25,7 @@ export default class AudioToImage {
   initialize(duration) {
     this.canvasesIdx = 0;
     this.canvases = [];
-    let sampleCount = Math.ceil(duration * audioContext.sampleRate),
+    let sampleCount = Math.ceil(duration * getAudioContext().sampleRate),
       di = Math.floor(Math.sqrt(sampleCount)),
       w = this.stereo ? di * 2 : di,
       wh = this.stereo ? w * 0.5 : w,
@@ -42,7 +42,7 @@ export default class AudioToImage {
   }
 
   remove() {
-    this.$parent.innerHTML = '';
+    this.$parent.innerHTML = "";
   }
 
   handleEnd() {
@@ -50,7 +50,7 @@ export default class AudioToImage {
     let canvas = new Canvas(),
       totalW = this.canvases[0].w,
       firstH = this.canvases[0].h,
-      totalH = this.canvases.map(a => a.h).reduce((a, b) => a + b);
+      totalH = this.canvases.map((a) => a.h).reduce((a, b) => a + b);
     canvas.setSize(totalW, totalH + 1);
     // Storing metadata in alpha channel of first four pixels
     let meta = new Canvas().createImage(4, 1);
@@ -65,7 +65,7 @@ export default class AudioToImage {
         d = cvs.imageData(0, 0);
       canvas.putImage(d, 0, y + 1);
     }
-    this.$parent.innerHTML = '';
+    this.$parent.innerHTML = "";
     this.$parent.appendChild(canvas.cvs);
   }
 

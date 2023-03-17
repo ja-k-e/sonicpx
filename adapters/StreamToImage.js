@@ -1,7 +1,6 @@
-import audioContext from '../globals/audioContext';
-import Canvas from '../components/Canvas';
-import Bit16 from './Bit16';
-import Bit24 from './Bit24';
+import getAudioContext from "../globals/audioContext.js";
+import Canvas from "../components/Canvas.js";
+import Bit16 from "./Bit16.js";
 
 const CANVAS_WIDTH = 1200,
   MAX_SECONDS = 30,
@@ -18,9 +17,11 @@ export default class StreamToImage {
   reset() {
     this.off = false;
     this.tick = 0;
-    this.$parent.innerHTML = '';
+    this.$parent.innerHTML = "";
     this.canvas = new Canvas(this.$parent);
-    let h = Math.ceil(MAX_SECONDS * audioContext.sampleRate / CANVAS_WIDTH);
+    let h = Math.ceil(
+      (MAX_SECONDS * getAudioContext().sampleRate) / CANVAS_WIDTH
+    );
     this.canvas.setSize(CANVAS_WIDTH, h);
     this.imageData = this.canvas.createImage(this.canvas.w, this.canvas.h);
   }
@@ -37,7 +38,7 @@ export default class StreamToImage {
     canvas.putImage(meta, 0, 0);
     let d = this.canvas.imageData(0, 0, this.canvas.w, this.lastY);
     canvas.putImage(d, 0, 1);
-    this.$parent.innerHTML = '';
+    this.$parent.innerHTML = "";
     this.$parent.appendChild(canvas.cvs);
   }
 
